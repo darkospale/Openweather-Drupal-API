@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains openweathermap.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function openweathermap_theme() {
+  return [
+    'openweathermap_weather_page' => [
+      'variables' => [],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function openweathermap_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the openweathermap module.
+    case 'help.page.openweathermap':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Retrieves weather forecast data from openweathermap.org and displays on the page.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+

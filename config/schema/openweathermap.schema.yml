@@ -1,0 +1,85 @@
+openweathermap.settings:
+  type: config_object
+  label: 'Openweathermap settings'
+  mapping:
+    api_weather_endpoint:
+      type: string
+      label: 'API weather endpoint'
+    api_air_pollution_endpoint:
+      type: string
+      label: 'API air pollution endpoint'
+    api_key:
+      type: string
+      label: 'API key'
+    country_code:
+      type: string
+      label: 'Country code'
+    city_id:
+      type: string
+      label: 'City id from the city.list.json file'
+    lat:
+      type: string
+      label: Latitude
+    lon:
+      type: string
+      label: Longitude
+    units_of_measurement:
+      type: string
+      label: 'Units of measurement'
+    update_periodically:
+      type: boolean
+      label: 'Update periodically'
+    update_interval:
+      type: integer
+      label: 'Update interval in minutes'
+    weather_characteristics:
+      type: mapping
+      label: 'Weather characteristics'
+      mapping:
+        feels_like:
+          type: label
+          label: 'Feels like'
+        wind_speed:
+          type: label
+          label: 'Wind speed'
+        temperature:
+          type: label
+          label: 'Temperature'
+        pressure:
+          type: label
+          label: Pressure
+        humidity:
+          type: label
+          label: Humidity
+    air_pollution_characteristics:
+      type: mapping
+      label: 'Air pollution characteristics'
+      mapping:
+        aqi:
+          type: label
+          label: Index
+        co: 
+          type: label
+          label: Carbon-monoxide
+        no: 
+          type: label
+          label: Nytrogen-monoxide
+        no2: 
+          type: label
+          label: Nytrogen-dioxide
+        o3: 
+          type: label
+          label: Ozone
+        so2: 
+          type: label
+          label: Sulphur-dioxide
+        pm2_5: 
+          type: label
+          label: 'Fine particulate matter'
+        pm10: 
+          type: label
+          label: 'Coarse particulate matter'
+        nh3: 
+          type: label
+          label: Ammonia
+

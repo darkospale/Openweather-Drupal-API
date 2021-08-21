@@ -1,0 +1,27 @@
+langcode: en
+api_weather_endpoint: 'http://api.openweathermap.org/data/2.5/weather'
+api_air_pollution_endpoint: 'http://api.openweathermap.org/data/2.5/air_pollution'
+api_key: '0b03b272416260313f36b14e12b20908'
+country_code: RS
+city_id: '3189595'
+lat: '19.6667'
+lon: '46.1'
+units_of_measurement: metric
+update_periodically: false
+update_interval: 10
+weather_characteristics:
+  feels_like: 'Feels like'
+  wind_speed: 'Wind speed'
+  temperature: Temperature
+  pressure: Pressure
+  humidity: Humidity
+air_pollution_characteristics:
+  aqi: Index
+  co: Carbon-monoxide
+  no: Nytrogen-monoxide
+  no2: Nytrogen-dioxide
+  o3: Ozone
+  so2: Sulphur-dioxide
+  pm2_5: 'Fine particulate matter'
+  pm10: 'Coarse particulate matter'
+  nh3: Ammonia

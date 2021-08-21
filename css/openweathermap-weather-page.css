@@ -1,0 +1,32 @@
+.unloaded {
+  opacity: 0;
+}
+
+.loaded {
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.loader {
+  margin-left: 30%;
+  margin-right: auto;
+}
+
+.weather_info {
+  margin-left: 10%;
+  margin-right: auto;
+}
+
+.service_unavailable {
+  margin-left: auto;
+  margin-right: 30%;
+  text-align: center;
+}
+
+.container {
+  display: block;
+}
+
+#edit-lat-lon-wrapper{
+  display: none;
+}

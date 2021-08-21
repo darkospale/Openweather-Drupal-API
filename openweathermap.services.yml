@@ -1,0 +1,17 @@
+services:
+
+  city_manager:
+    class: Drupal\openweathermap\CityManager
+    arguments: ['@country_manager', '@file_system']
+
+  # Controllers.
+  display_weather_controller:
+    class: Drupal\openweathermap\Controller\DisplayWeatherController
+    arguments: ['@country_manager', '@city_manager', '@language_manager', '@config.factory']
+
+  # # Form.
+  # display_weather_form:
+  #   class: Drupal\openweathermap\Form\DisplayWeatherForm
+
+  create_node:
+    class: Drupal\openweathermap\Service\WeatherCreateNode

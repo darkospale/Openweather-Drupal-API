@@ -1,0 +1,61 @@
+openweathermap.display_weather:
+  version: VERSION
+  css:
+    component:
+      css/openweathermap-weather-page.css: {}
+  js:
+    js/openweathermap.display_weather.js: {}
+  dependencies:
+    - core/drupalSettings
+    - openweathermap/vue
+    - openweathermap/axios
+
+openweathermap.select2_for_settings_form:
+  version: VERSION
+  js:
+    js/openweathermap.settings_form.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+    - openweathermap/select2
+
+vue:
+  remote: https://github.com/vuejs/vue
+  version: 3.0.4
+  license:
+    name: MIT
+    url: https://github.com/vuejs/vue/blob/dev/LICENSE
+    gpl-compatible: true
+  js:
+    https://unpkg.com/vue@3.0.4/dist/vue.global.prod.js: { type: external, minified: true }
+  dependencies:
+    - openweathermap/vue_spinner
+
+axios:
+  remote: https://github.com/axios/axios
+  version: 0.21.0
+  license:
+    name: MIT
+    url: https://github.com/axios/axios/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    https://unpkg.com/axios@0.21.0/dist/axios.min.js: { type: external, minified: true }
+
+vue_spinner:
+  version: 1.0.4
+  js:
+    js/vue-spinner.min.js: { minified: true }
+
+select2:
+  remote: https://select2.org
+  version: 4.0.13
+  license:
+    name: MIT
+    url: https://github.com/select2/select2/blob/master/LICENSE.md
+    gpl-compatible: true
+  css:
+    component:
+      https://unpkg.com/select2@4.0.13/dist/css/select2.min.css: { type: external, minified: true }
+  js:
+    https://unpkg.com/select2@4.0.13/dist/js/select2.min.js: { type: external, minified: true }

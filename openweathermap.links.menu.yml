@@ -1,0 +1,11 @@
+openweathermap.display_weather_default_location:
+  title: 'Weather'
+  route_name: openweathermap.display_weather_default_location
+  description: 'Weather forecast'
+  parent: main
+  menu_name: main
+
+openweathermap.settings:
+  title: 'Weather'
+  route_name: openweathermap.settings
+  parent: system.admin_config_services

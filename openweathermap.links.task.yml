@@ -1,0 +1,4 @@
+openweathermap.settings:
+  route_name: openweathermap.settings
+  title: Settings
+  base_route: openweathermap.settings

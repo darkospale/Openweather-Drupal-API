@@ -1,0 +1,33 @@
+openweathermap.display_weather_default_location:
+  path: '/weather'
+  defaults:
+    _form: 'display_weather_form'
+    _controller: 'display_weather_controller:displayWeatherDefaultLocation'
+  requirements:
+    _permission: 'view weather forecast'
+
+openweathermap.display_weather_by_city_name:
+  path: '/weather/{city}'
+  defaults:
+    _form: 'display_weather_form'
+    _controller: 'display_weather_controller:displayWeatherByCityName'
+  requirements:
+    _permission: 'view weather forecast'
+
+openweathermap.display_weather_by_city_name_and_country_code:
+  path: '/weather/{city}/{country_code}'
+  defaults:
+    _form: 'display_weather_form'
+    _controller: 'display_weather_controller:displayWeatherByCityNameAndCountryCode'
+  requirements:
+    _permission: 'view weather forecast'
+
+openweathermap.settings:
+  path: '/admin/config/services/weather'
+  defaults:
+    _form: '\Drupal\openweathermap\Form\OpenweathermapSettingsForm'
+    _title: 'Weather Forecast Settings'
+  requirements:
+    _permission: 'administer weather forecast'
+  options:
+    _admin_route: TRUE

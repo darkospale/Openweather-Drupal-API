@@ -1,0 +1,22 @@
+{
+  "name": "drupal/openweathermap",
+  "description": "Retrieves weather forecast data from openweathermap.org and displays on the page.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "homepage": "https://drupal.org/project/openweathermap",
+  "authors": [
+    {
+      "name": "Andrey Vitushkin (wombatbuddy)",
+      "homepage": "https://www.drupal.org/u/wombatbuddy",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/openweathermap",
+    "source": "https://git.drupalcode.org/project/openweathermap"
+  },
+  "require": {
+    "drupal/core": "^8 || ^9"
+  }
+}

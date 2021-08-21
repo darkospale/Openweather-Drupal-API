@@ -1,0 +1,60 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a weather forecast.
+ *
+ * The code inside {% verbatim %} tag is processed by Vue.js, but not by Twig.
+ */
+#}
+{% verbatim %}
+
+<div id="weather" class="container">
+  <grid-loader :loading="display_loader" color="LightBlue" :size="size" class="loader"></grid-loader>
+  <div :class="[city ? 'loaded' : 'unloaded']" class="weather_info">
+    <template v-if="city">
+      <h1>{{ city }}, {{ country }}</h1>
+
+      <div key="flag" className="country-flag">
+        <img :src="flag">
+      </div>
+
+      <div key="weather_icon" className="weather-icon">
+        <img :src="icon_url">
+      </div>
+
+      <div key="wind_deg_icon" className="wind-deg-icon">
+        <img :src="wind_deg_icon">
+      </div>
+
+      <b>{{ feels_like }}. {{ description }}. {{ wind_speed }}.</b>
+
+      <div>{{ temperature }}</div>
+      <div>{{ pressure }}</div>
+      <div>{{ humidity }}%</div>
+
+      <div> {{ time }} </div>
+      <div> {{ timezone }} </div>
+
+      <h2> Air Pollution {{ aqi }} - {{ aqi_desc }}</h2>
+
+      <div>{{ co }}</div>
+      <div>{{ no }}</div>
+      <div>{{ no2 }}</div>
+      <div>{{ o3 }}</div>
+      <div>{{ so2 }}</div>
+      <div>{{ pm2_5 }}</div>
+      <div>{{ pm10 }}</div>
+      <div>{{ nh3 }}</div>
+
+    </template>
+  </div>
+  <template v-if="service_unavailable">
+    <div class="service_unavailable">
+      <h1>API invalid</h1>
+      <button @click="getWeather">Click to try again</button>
+    </div>
+  </template>
+</div>
+
+{% endverbatim %}
+
