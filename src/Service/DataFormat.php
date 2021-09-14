@@ -4,6 +4,19 @@ namespace Drupal\openweathermap\Service;
 
 class DataFormat {
 
+  /**
+   * Format data.
+   *
+   * @param $units_of_measurement
+   *   Units of measurement.
+   * @param $build
+   *   Build array.
+   * @param $build_air_pollution
+   *   Build air pollution array.
+   *
+   * @return array
+   *   Formatted data.
+   */
   public function formData($units_of_measurement, $build, $build_air_pollution) {
     switch ($units_of_measurement) {
       case 'metric':
@@ -62,6 +75,7 @@ class DataFormat {
       $wind_direction = 'North-west';
     }
 
+    // Air quality index info.
     switch ($build_air_pollution->list[0]->main->aqi) {
       case 1:
         $index_description = 'Good';
@@ -79,6 +93,8 @@ class DataFormat {
         $index_description = 'Very Poor';
         break;
     }
+
+    // Store all changed data in this array.
     $formatted_data = [
       'temp_sign' => $temp_sign,
       'speed' => $build->wind->speed,

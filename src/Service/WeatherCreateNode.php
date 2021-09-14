@@ -9,15 +9,47 @@ use Drupal\openweathermap\CityManagerInterface;
 
 class WeatherCreateNode {
 
+  /**
+   * Country manager.
+   *
+   * @var Drupal\Core\Locale\CountryManagerInterface
+   *   Country manager class.
+   */
   protected $country_manager;
 
+  /**
+   * City manager.
+   *
+   * @var Drupal\openweathermap\CityManagerInterface
+   *   City manager class.
+   */
   protected $city_manager;
 
+  /**
+   * Constructor.
+   *
+   * @param CountryManagerInterface $country_manager
+   *   Country manager.
+   * @param CityManagerInterface $city_manager
+   *   City manager.
+   */
   public function __construct(CountryManagerInterface $country_manager, CityManagerInterface $city_manager){
     $this->countryManager = $country_manager;
     $this->cityManager = $city_manager;
   }
 
+  /**
+   * Create node function.
+   *
+   * @param $data
+   *   Weather data.
+   * @param $air_pollution_data
+   *   Air pollution data.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public function createNode($data, $air_pollution_data){
 
     if ($data->sys->country) {
@@ -33,18 +65,18 @@ class WeatherCreateNode {
 
     // dsm($is_ajax);
 
-//    date_default_timezone_get();
     $date = date('H:i:s d.m.Y.', time());
 
-    // do{
-      $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  // do{
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
-      $currentUser = User::load(\Drupal::currentUser()->id());
-      $uid = 1;
-      if ($user = $currentUser) {
-        $uid = $user->id();
-      }
+    $currentUser = User::load(\Drupal::currentUser()->id());
+    $uid = 1;
+    if ($user = $currentUser) {
+      $uid = $user->id();
+    }
 
+    // @todo call this from another service.
     // North.
     if($data->wind->deg > 337 || $data->wind->deg <= 22) {
       $wind_icon = 'wind-n.jpg';
@@ -86,6 +118,7 @@ class WeatherCreateNode {
       $wind_direction = 'North-west';
     }
 
+    // @todo using this.
 //    $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
 
     $title = 'Country: ' . $country_name . ', City: ' . $city_name . ', Date: ' . $date;
@@ -121,4 +154,5 @@ class WeatherCreateNode {
       $node->save();
     // } while($is_ajax);
   }
+
 }

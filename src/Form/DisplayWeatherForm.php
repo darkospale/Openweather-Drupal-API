@@ -6,17 +6,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\openweathermap\Service\WeatherService;
 
 /**
  * The settings form for the 'Openweathermap' module.
  */
 class DisplayWeatherForm extends FormBase {
-
-  /**
-   * @var array
-   */
-  protected $config;
 
   /**
    * City manager service.
@@ -65,6 +59,7 @@ class DisplayWeatherForm extends FormBase {
     // Attaching the select2 library in order to be able to select countries and cities from the city.list.json
     $form['#attached']['library'] = 'openweathermap/openweathermap.select2_for_settings_form';
 
+    // @todo I think this has got some work to do because it does not remember the selection
     // Update city value if country is selected
     if (isset($form_state->getUserInput()['country'])) {
 

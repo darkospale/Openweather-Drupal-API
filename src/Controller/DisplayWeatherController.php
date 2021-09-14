@@ -10,8 +10,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class DisplayWeatherController extends ControllerBase {
 
-  /**e
-   * {@inheritdoc}
+  /**
+   * Build controller.
+   *
+   * @return mixed
+   *   Build controller.
    */
   public function display() {
 //    if (isset($data)) {
@@ -39,10 +42,13 @@ class DisplayWeatherController extends ControllerBase {
 //    return $this->redirectPage();
   }
 
-  public function redirectPage() {
-    $path = '/weather-form';
-    $response = new RedirectResponse($path);
-    $response->send();
-  }
+  /**
+   * Redirect page function.
+   */
+//  public function redirectPage() {
+//    $path = '/weather-form';
+//    $response = new RedirectResponse($path);
+//    $response->send();
+//  }
 
 }

@@ -7,7 +7,6 @@ services:
   # Controllers.
   display_weather_controller:
     class: Drupal\openweathermap\Controller\DisplayWeatherController
-    arguments: ['@country_manager', '@city_manager', '@language_manager', '@config.factory']
 
   create_node:
     class: Drupal\openweathermap\Service\WeatherCreateNode

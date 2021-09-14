@@ -5,10 +5,7 @@ openweathermap.display_weather:
       css/openweathermap-weather-page.css: {}
   js:
     js/google_map.js: {}
-
-openweathermap.chart:
-  js:
-    js/chart.js: {}
+#    js/chart.js: {}
   dependencies:
     - core/drupal
     - core/jquery

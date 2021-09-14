@@ -19,7 +19,13 @@ class OpenweathermapSettingsForm extends ConfigFormBase {
   protected $config;
 
   /**
-   * {@inheritdoc}
+   * Create function.
+   *
+   * @param ContainerInterface $container
+   *   Container Interface.
+   *
+   * @return ConfigFormBase|OpenweathermapSettingsForm
+   *   Settings.
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
@@ -28,7 +34,10 @@ class OpenweathermapSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Config names.
+   *
+   * @return string[]
+   *   Config.
    */
   protected function getEditableConfigNames() {
     return [
@@ -37,14 +46,25 @@ class OpenweathermapSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Config form.
+   *
+   * @return string
+   *   Form ID.
    */
   public function getFormId() {
     return 'openweathermap_settings_form';
   }
 
   /**
-   * {@inheritdoc}
+   * Build config form.
+   *
+   * @param array $form
+   *   Form.
+   * @param FormStateInterface $form_state
+   *   Form state.
+   *
+   * @return array
+   *   Return form.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
@@ -80,7 +100,12 @@ class OpenweathermapSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Submit form.
+   *
+   * @param array $form
+   *   Form.
+   * @param FormStateInterface $form_state
+   *   Form state.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);

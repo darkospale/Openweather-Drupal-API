@@ -7,8 +7,6 @@ namespace Drupal\openweathermap\service;
  */
 class WeatherService {
 
-  protected $config;
-
   /**
    * API Weather Endpoint.
    *
@@ -29,13 +27,6 @@ class WeatherService {
    * @var string
    */
   protected $api_air_pollution_endpoint;
-
-  /**
-   * Configuration.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $configFactory;
 
   /**
    * Function that makes the API request calls.
@@ -60,7 +51,7 @@ class WeatherService {
     $units_of_measurement = $params['units_of_measurement'];
 
 //    if (isset($data['update_container']['update_interval'])) {
-//      // call a callback function TODO
+//      // @todo call a callback function.
 //    }
 
     // Decode JSON for weather information.
@@ -153,6 +144,9 @@ class WeatherService {
     ];
     $value['map'] = [
       '#markup' => '<div id="map"></div>',
+    ];
+    $value['chart'] = [
+      '#markup' => '<div id="myChart"></div>',
     ];
 
     // Send the lat and lon data to javascript
