@@ -109,6 +109,16 @@ class CityManager implements CityManagerInterface {
     return FALSE;
   }
 
+  public function getCityById($country_code, $city_id){
+
+    foreach ($this->cityList as $city){
+      if($city['country'] == $country_code && $city['id'] == $city_id){
+        return $city['name'];
+      }
+    }
+    return FALSE;
+  }
+
   /**
    * {@inheritdoc}
    */

@@ -7,7 +7,7 @@
  */
 #}
 {% verbatim %}
-
+<!--<canvas id="myChart" width="400" height="400"></canvas>-->
 <div id="weather" class="container">
   <grid-loader :loading="display_loader" color="LightBlue" :size="size" class="loader"></grid-loader>
   <div :class="[city ? 'loaded' : 'unloaded']" class="weather_info">
@@ -54,7 +54,9 @@
       <button @click="getWeather">Click to try again</button>
     </div>
   </template>
+
 </div>
 
-{% endverbatim %}
+<div id="map"></div>
 
+{% endverbatim %}

@@ -1,6 +1,7 @@
 'view weather forecast':
   title: 'View a weather forecast'
   description: 'Allows viewing a weather forecast.'
+  restrict access: false
 
 'administer weather forecast':
   title: 'Administer a weather forecast'

@@ -5,6 +5,8 @@ namespace Drupal\openweathermap\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\openweathermap\Service\WeatherService;
 
 /**
  * The settings form for the 'Openweathermap' module.
@@ -12,18 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DisplayWeatherForm extends FormBase {
 
   /**
-   * The configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
-   * All countries from the 'city.list.json' file.
-   *
    * @var array
    */
-  protected $countries;
+  protected $config;
 
   /**
    * City manager service.
@@ -33,13 +26,27 @@ class DisplayWeatherForm extends FormBase {
   protected $cityManager;
 
   /**
-   * {@inheritdoc}
+   * All countries from the 'city.list.json' file.
+   *
+   * @var array
+   */
+  protected $countries;
+
+  /**
+   * @var Drupal\openweathermap\Service\WeatherService
+   */
+  protected $weatherService;
+
+  /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *
+   * @return \Drupal\openweathermap\Form\DisplayWeatherForm
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
     $instance->cityManager = $container->get('city_manager');
-    $instance->config = $instance->config('openweathermap.settings');
     $instance->countries = $instance->cityManager->getCountries();
+    $instance->weatherService = $container->get('get_weather');
     return $instance;
   }
 
@@ -47,7 +54,7 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'openweathermap_form';
+    return 'openweathermap.weather_form';
   }
 
   /**
@@ -55,31 +62,40 @@ class DisplayWeatherForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    // Attaching the select2 library in order to be able to select countries and cities from the city.list.json
     $form['#attached']['library'] = 'openweathermap/openweathermap.select2_for_settings_form';
 
     // Update city value if country is selected
     if (isset($form_state->getUserInput()['country'])) {
 
       $country_code = $form_state->getUserInput()['country'];
-      $city_id = NULL;
+      $city_id = $form_state->getUserInput()['city'];
     }
     else {
-      $country_code = $this->config->get('country_code');
-      $city_id = $this->config->get('city_id');
+      $country_code = $form_state->getValue('country');
+      $city_id = $form_state->getValue('city');
     }
 
-    // Update latitude and longitude value if city is selected
     if (isset($form_state->getUserInput()['city'])) {
 
       $city_id = $form_state->getUserInput()['city'];
-      $lat = NULL;
-      $lon = NULL;
+      $lat = $form_state->getUserInput()['lat'];
+      $lon = $form_state->getUserInput()['lon'];
     }
     else {
-      $city_id = $this->config->get('city_id');
-      $lat = $this->config->get('lat');
-      $lon = $this->config->get('lon');
+      $city_id = $form_state->getValue('city');
+      $lat = $form_state->getValue('lat');
+      $lon = $form_state->getValue('lon');
     }
+
+    if (isset($form_state->getUserInput()['units_measurement'])) {
+      $units_measurement = $form_state->getUserInput()['units_measurement'];
+    }
+    else {
+      $units_measurement = $form_state->getValue('units_measurement');
+    }
+
+    $cities = $this->cityManager->getCitiesByCountryCode($country_code);
 
     $form['country'] = [
       '#type' => 'select',
@@ -94,8 +110,6 @@ class DisplayWeatherForm extends FormBase {
         'wrapper' => 'city-select-wrapper',
       ],
     ];
-
-    $cities = $this->cityManager->getCitiesByCountryCode($country_code);
 
     $form['city'] = [
       '#type' => 'select',
@@ -115,13 +129,13 @@ class DisplayWeatherForm extends FormBase {
       '#validated' => TRUE,
     ];
 
-    // $lat = $this->cityManager->getLatByCity($city_id);
-    // $lon = $this->cityManager->getLonByCity($city_id);
-
     $form['lat_lon_container'] = [
       '#type' => 'fieldset',
       '#prefix' => '<div id="edit-lat-lon-wrapper">',
       '#suffix' => '</div>',
+      '#attributes' => [
+        'style' => 'display: none;',
+      ],
     ];
 
     $form['lat_lon_container']['lat'] = [
@@ -136,10 +150,6 @@ class DisplayWeatherForm extends FormBase {
       '#validated' => TRUE,
     ];
 
-    dsm($form['lat_lon_container']);
-
-    // OVO RADI SIGURNO ALI POSLE DRUGOG SAVEA
-
     $form['units_container'] = [
       '#type' => 'fieldset',
     ];
@@ -152,7 +162,7 @@ class DisplayWeatherForm extends FormBase {
         'metric' => $this->t('metric'),
         'imperial' => $this->t('imperial'),
       ],
-      '#default_value' => $this->config->get('units_of_measurement'),
+      '#default_value' => $units_measurement,
       '#required' => TRUE,
     ];
 
@@ -164,14 +174,14 @@ class DisplayWeatherForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Update periodically'),
       '#description' => $this->t('If it is set, then a weather forecast data will be updated at the specified time interval.'),
-      '#default_value' => $this->config->get('update_periodically'),
+      '#default_value' => $form_state->getValue('update_periodically'),
     ];
 
     $form['update_container']['update_interval'] = [
       '#type' => 'number',
       '#title' => $this->t('Update interval in minutes'),
       '#min' => 1,
-      '#default_value' => $this->config->get('update_interval'),
+      '#default_value' => $form_state->getValue('update_interval'),
       '#states' => [
         'enabled' => [
           ':input[name="update_periodically"]' => ['checked' => TRUE],
@@ -179,20 +189,53 @@ class DisplayWeatherForm extends FormBase {
       ],
     ];
 
-    return parent::buildForm($form, $form_state);
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Search for the location'),
+    ];
+
+    return $form;
   }
 
   /**
-   * {@inheritdoc}
+   * Function that redirects user to the /weather page.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state of an array.
+   */
+  public function redirectPage() {
+    $path = '/weather';
+    $response = new RedirectResponse($path);
+    $response->send();
+  }
+
+  /**
+   * Function that gives user the ajax callback of cities when country is selected.
+   *
+   * @param $form
+   *   Form array.
+   * @param $form_state
+   *   Form state array.
+   *
+   * @return mixed
    */
   public function changeCountryAjaxCallback($form, $form_state) {
     return $form['city'];
   }
 
   /**
-   * {@inheritdoc}
+   * Function that gives user the ajax callback of latitude and longited when city is selected.
+   *
+   * @param $form
+   *   Form array.
+   * @param $form_state
+   *   Form state array.
+   *
+   * @return mixed
    */
-  public function changeCityLatLonAjaxCallback($form, $form_state){
+  public function changeCityLatLonAjaxCallback($form, $form_state) {
     $lat = $this->cityManager->getLatByCity($form['city']['#value']);
     $lon = $this->cityManager->getLonByCity($form['city']['#value']);
     $form['lat_lon_container']['lat']['#value'] = $lat;
@@ -202,10 +245,15 @@ class DisplayWeatherForm extends FormBase {
   }
 
   /**
+   *
    * Implement the validator because we were forced to set '#validated' => TRUE.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state array.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
 
     if (empty($form_state->getValue('city'))) {
       $form_state->setErrorByName('city', $this->t('The "City" field is required.'));
@@ -213,19 +261,17 @@ class DisplayWeatherForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Submit Form function.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state array.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
 
-    $this->config->set('country_code', $form_state->getValue('country'));
-    $this->config->set('city_id', $form_state->getValue('city'));
-    $this->config->set('lat', $form_state->getValue('lat'));
-    $this->config->set('lon', $form_state->getValue('lon'));
-    $this->config->set('update_periodically', $form_state->getValue('update_periodically'));
-    $this->config->set('update_interval', $form_state->getValue('update_interval'));
-
-    $this->config->save();
+    $_SESSION['form_values'] = $form_state;
+    $this->redirectPage();
   }
 
 }

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_theme().
@@ -34,3 +35,90 @@ function openweathermap_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+///**
+// * Implements hook_form_FORM_ID_alter().
+// */
+//function openweathermap_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+//  $form['#submit'][] = 'mymodule_user_login_submit';
+//}
+//
+///**
+// * Form submission handler for user_login_form().
+// *
+// * Redirects the user to the dashboard after logging in.
+// */
+//function openweathermap_user_login_submit(&$form, FormStateInterface $form_state) {
+//  $url = Url::fromRoute('openweathermap.dashboard');
+//
+//  // Check if a destination was set, probably on an exception controller.
+//  // @see \Drupal\user\Form\UserLoginForm::submitForm()
+//  $request = \Drupal::service('request_stack')->getCurrentRequest();
+//  if (!$request->request->has('destination')) {
+//    $form_state->setRedirectUrl($url);
+//  }
+//  else {
+//    $request->query->set('destination', $request->request->get('destination'));
+//  }
+//}
+//
+///**
+//* Redirect the user to a custom url
+//* after login, keep destination.
+// */
+//function openweathermap_user_login(&$edit, $account) {
+//  if (!isset($_POST['form_id']) || $_POST['form_id'] != 'user_pass_reset') {
+//
+//    global $user;
+//
+//    $homepage = variable_get('site_frontpage', 'home');
+//
+//    if ($trigger == 'login') {
+//      $spaces = oa_core_get_user_spaces($user->uid);
+//      // if not a member of any spaces, go to default home
+//      if (count($spaces) <= 0) {
+//        return $homepage;
+//      }
+//
+//      $redirection = 'my-custom-redirect-url';
+//
+//      // Unless there is already a redirection going, or the user is trying to reset his password, we redirect to $redirection.
+//      if (empty($_GET['destination'])
+//        && !is_null($redirection)
+//        && (!isset($_POST['form_id']) || $_POST['form_id'] != 'user_pass_reset'))
+//      {
+//        $_GET['destination'] = $redirection; // Should we use $edit['redirect'] instead..?
+//      }
+//      /** End custom logic */
+//
+//      return $redirection;
+//
+//    }
+//    elseif ($trigger == 'logout') {
+//      return $homepage;
+//    }
+//
+//    if ($current == NULL) {
+//      $current = $_GET['q'];
+//    }
+//
+//    // no rule matched
+//    return FALSE;
+//  }
+//}
+//
+///** Make sure our module's hook_user_login is executed last
+// * (and thus later than the one of open atrium oa_core/includes/oa_core.login.inc)
+// * Implements hook_module_implements_alter
+// * https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_module_implements_alter/7
+// */
+//
+//function openweathermap_module_implements_alter(&$implementations, $hook) {
+//  if (($hook == 'user_login') && isset($implementations['openweathermap'])) {
+//    $group = $implementations['openweathermap'];
+//    unset($implementations['oa_core']);
+//    $implementations['openweathermap'] = $group;
+//  }
+//}
+//
+//
+//

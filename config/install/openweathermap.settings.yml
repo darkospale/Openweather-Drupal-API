@@ -4,8 +4,8 @@ api_air_pollution_endpoint: 'http://api.openweathermap.org/data/2.5/air_pollutio
 api_key: '0b03b272416260313f36b14e12b20908'
 country_code: RS
 city_id: '3189595'
-lat: '19.6667'
-lon: '46.1'
+lat: '46.1'
+lon: '19.6667'
 units_of_measurement: metric
 update_periodically: false
 update_interval: 10

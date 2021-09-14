@@ -5,6 +5,7 @@
 .loaded {
   opacity: 1;
   transition: opacity 2s ease;
+  margin-left: unset !important;
 }
 
 .loader {
@@ -15,18 +16,29 @@
 .weather_info {
   margin-left: 10%;
   margin-right: auto;
+  text-align: center;
 }
 
 .service_unavailable {
   margin-left: auto;
   margin-right: 30%;
+}
+
+.content {
   text-align: center;
 }
 
 .container {
   display: block;
+  padding: unset !important;
 }
 
-#edit-lat-lon-wrapper{
+#edit-lat-lon-wrapper {
   display: none;
+}
+
+#map {
+  height: 300px;
+  position: relative;
+  margin: 0 auto;
 }

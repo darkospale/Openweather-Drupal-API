@@ -9,9 +9,12 @@ services:
     class: Drupal\openweathermap\Controller\DisplayWeatherController
     arguments: ['@country_manager', '@city_manager', '@language_manager', '@config.factory']
 
-  # # Form.
-  # display_weather_form:
-  #   class: Drupal\openweathermap\Form\DisplayWeatherForm
-
   create_node:
     class: Drupal\openweathermap\Service\WeatherCreateNode
+    arguments: ['@country_manager', '@city_manager']
+
+  get_weather:
+    class: Drupal\openweathermap\Service\WeatherService
+
+  form_data:
+    class: Drupal\openweathermap\Service\DataFormat

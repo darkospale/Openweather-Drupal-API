@@ -38,27 +38,4 @@ interface CityManagerInterface {
    *   A a city id or FALSE if a city was not found.
    */
   public function getCityId($country_code, $city_name);
-
-  // /**
-  //  * Get latitude using city id
-  //  * 
-  //  * @param string $city_id
-  //  *   A city id.
-  //  * 
-  //  * @return string|bool
-  //  *   A city id or FALSE if a city was not found.
-  //  */
-  // public function getLatByCityId($city_id);
-
-  // /**
-  //  * Get latitude using city id
-  //  * 
-  //  * @param string $city_id
-  //  *   A city id.
-  //  * 
-  //  * @return string|bool
-  //  *   A city id or FALSE if a city was not found.
-  //  */
-  // public function getLonByCityId($city_id);
-
 }

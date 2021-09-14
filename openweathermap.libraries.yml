@@ -4,11 +4,17 @@ openweathermap.display_weather:
     component:
       css/openweathermap-weather-page.css: {}
   js:
-    js/openweathermap.display_weather.js: {}
+    js/google_map.js: {}
+
+openweathermap.chart:
+  js:
+    js/chart.js: {}
   dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
     - core/drupalSettings
-    - openweathermap/vue
-    - openweathermap/axios
+    - openweathermap/select2
 
 openweathermap.select2_for_settings_form:
   version: VERSION
@@ -18,34 +24,8 @@ openweathermap.select2_for_settings_form:
     - core/drupal
     - core/jquery
     - core/jquery.once
+    - core/drupalSettings
     - openweathermap/select2
-
-vue:
-  remote: https://github.com/vuejs/vue
-  version: 3.0.4
-  license:
-    name: MIT
-    url: https://github.com/vuejs/vue/blob/dev/LICENSE
-    gpl-compatible: true
-  js:
-    https://unpkg.com/vue@3.0.4/dist/vue.global.prod.js: { type: external, minified: true }
-  dependencies:
-    - openweathermap/vue_spinner
-
-axios:
-  remote: https://github.com/axios/axios
-  version: 0.21.0
-  license:
-    name: MIT
-    url: https://github.com/axios/axios/blob/master/LICENSE
-    gpl-compatible: true
-  js:
-    https://unpkg.com/axios@0.21.0/dist/axios.min.js: { type: external, minified: true }
-
-vue_spinner:
-  version: 1.0.4
-  js:
-    js/vue-spinner.min.js: { minified: true }
 
 select2:
   remote: https://select2.org
