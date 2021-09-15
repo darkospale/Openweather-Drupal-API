@@ -66,13 +66,13 @@ class WeatherService {
     $content_air_pollution = $request_air_pollution->getBody()->getContents();
     $build_air_pollution = json_decode($content_air_pollution);
 
-    // Call a service for creating nodes.
-    \Drupal::service('create_node')->createNode($build, $build_air_pollution);
-
     $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
 
-    $value['country'] = [
+    $value['country_image'] = [
       '#markup' => '<img src=/sites/default/files/weather-icons/flags/'.strtolower($build->sys->country).'.png><br>',
+    ];
+    $value['country'] = [
+      '#markup' => $build->sys->country,
     ];
     $value['city'] = [
       '#markup' => '<h2>'.$build->name.'</h2><br>',
@@ -145,13 +145,13 @@ class WeatherService {
     $value['map'] = [
       '#markup' => '<div id="map"></div>',
     ];
-    $value['chart'] = [
-      '#markup' => '<div id="myChart"></div>',
-    ];
 
     // Send the lat and lon data to javascript
     $value['#attached']['drupalSettings']['lat'] = $build->coord->lat;
     $value['#attached']['drupalSettings']['lon'] = $build->coord->lon;
+
+    // Call a service for creating nodes.
+    \Drupal::service('create_node')->createNode($value);
 
     return $value;
   }

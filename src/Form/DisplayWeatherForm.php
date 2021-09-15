@@ -265,8 +265,11 @@ class DisplayWeatherForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $_SESSION['form_values'] = $form_state;
-    $this->redirectPage();
+//    if ($_SESSION['count'] < 3) {
+        $_SESSION['form_values'] = $form_state;
+        $_SESSION['count']++;
+        $this->redirectPage();
+//    }
   }
 
 }

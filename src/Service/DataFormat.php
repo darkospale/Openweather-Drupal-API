@@ -18,6 +18,7 @@ class DataFormat {
    *   Formatted data.
    */
   public function formData($units_of_measurement, $build, $build_air_pollution) {
+
     switch ($units_of_measurement) {
       case 'metric':
         $temp_sign = '°C';
@@ -28,7 +29,8 @@ class DataFormat {
         $temp_sign = '°F';
         $speed_sign = 'mph';
         break;
-      case 'default':
+      case 'standard':
+      default:
         $temp_sign = 'K';
         $speed_sign = 'm/s';
         break;

@@ -50,16 +50,17 @@ class WeatherCreateNode {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function createNode($data, $air_pollution_data){
+  public function createNode($data){
 
-    if ($data->sys->country) {
-      $country_name = $this->countryManager->getList()[$data->sys->country]->__toString();
+    $country_name = $data['country']['#markup'];
+
+    if ($country_name) {
+      $country_name = $this->countryManager->getList()[$country_name];
     }
     else {
       $country_name = '';
     }
-
-    $city_name = $this->cityManager->getCityById($data->sys->country, $data->id);
+    $city_name = strip_tags($data['city']['#markup']);
 
     // $is_ajax = \Drupal::request()->isXmlHttpRequest();
 
@@ -76,51 +77,6 @@ class WeatherCreateNode {
       $uid = $user->id();
     }
 
-    // @todo call this from another service.
-    // North.
-    if($data->wind->deg > 337 || $data->wind->deg <= 22) {
-      $wind_icon = 'wind-n.jpg';
-      $wind_direction = 'North';
-    }
-    // North-east.
-    else if($data->wind->deg > 23 || $data->wind->deg <= 67) {
-      $wind_icon = 'wind-ne.jpg';
-      $wind_direction = 'North-east';
-    }
-    // East.
-    else if($data->wind->deg > 68 || $data->wind->deg <= 112) {
-      $wind_icon = 'wind-e.jpg';
-      $wind_direction = 'East';
-    }
-    // South-east.
-    else if($data->wind->deg > 113 || $data->wind->deg <= 157) {
-      $wind_icon = 'wind-se.jpg';
-      $wind_direction = 'South-east';
-    }
-    // South.
-    else if($data->wind->deg > 158 || $data->wind->deg <= 202) {
-      $wind_icon = 'wind-s.jpg';
-      $wind_direction = 'South';
-    }
-    // South-west.
-    else if($data->wind->deg > 203 || $data->wind->deg <= 247) {
-      $wind_icon = 'wind-sw.jpg';
-      $wind_direction = 'South-west';
-    }
-    // West.
-    else if($data->wind->deg > 248 || $data->wind->deg <= 292) {
-      $wind_icon = 'wind-w.jpg';
-      $wind_direction = 'West';
-    }
-    // North-west.
-    else if($data->wind->deg > 293 || $data->wind->deg <= 337) {
-      $wind_icon = 'wind-nw.jpg';
-      $wind_direction = 'North-west';
-    }
-
-    // @todo using this.
-//    $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
-
     $title = 'Country: ' . $country_name . ', City: ' . $city_name . ', Date: ' . $date;
 
       $node = $node_storage->create([
@@ -129,27 +85,24 @@ class WeatherCreateNode {
         'title' => $title,
         'field_country' => $country_name,
         'field_city' => $city_name,
-        'field_date' => $date,
-        'field_main' => $data->weather[0]->main,
-        'field_description' => $data->weather[0]->description,
-        'field_temp' => $data->main->temp,
-        'field_feels_like' => $data->main->feels_like,
-        'field_temp_min' => $data->main->temp_min,
-        'field_temp_max' => $data->main->temp_max,
-        'field_pressure' => $data->main->pressure.'mbar',
-        'field_humidity' => $data->main->humidity.'%',
-        'field_wind_speed' => $data->wind->speed,
-        'field_wind_deg' => $data->wind->deg,
-        'field_wind_direction' => $wind_direction,
-        'field_aqi' => $air_pollution_data->list[0]->main->aqi,
-        'field_carbon_monoxide' => $air_pollution_data->list[0]->components->co,
-        'field_nitrogen_monoxide' => $air_pollution_data->list[0]->components->no,
-        'field_nitrogen_dioxide' => $air_pollution_data->list[0]->components->no2,
-        'field_ozone' => $air_pollution_data->list[0]->components->o3,
-        'field_sulphur_dioxide' => $air_pollution_data->list[0]->components->so2,
-        'field_fine_particles_matter' => $air_pollution_data->list[0]->components->pm2_5,
-        'field_coarse_particulate_matter' => $air_pollution_data->list[0]->components->pm10,
-        'field_ammonia' => $air_pollution_data->list[0]->components->o3,
+        'field_description' => strip_tags($data['description']['#markup']),
+        'field_temperature' => strip_tags($data['temp']['#markup']),
+        'field_feels_like' => strip_tags($data['feels_like']['#markup']),
+        'field_minimum_temperature' => strip_tags($data['temp_min']['#markup']),
+        'field_maximum_temperature' => strip_tags($data['temp_max']['#markup']),
+        'field_pressure' => strip_tags($data['pressure']['#markup']),
+        'field_humidity' => strip_tags($data['humidity']['#markup']),
+        'field_wind_speed' => strip_tags($data['wind_speed']['#markup']),
+        'field_wind_direction' => strip_tags($data['wind_direction']['#markup']),
+        'field_air_pollution_index' => strip_tags($data['aqi']['#markup']),
+        'field_carbon_monoxide' => strip_tags($data['co']['#markup']),
+        'field_nitrogen_monoxide' => strip_tags($data['no']['#markup']),
+        'field_nitrogen_dioxide' => strip_tags($data['no2']['#markup']),
+        'field_ozone' => strip_tags($data['o3']['#markup']),
+        'field_sulphur_dioxide' => strip_tags($data['so2']['#markup']),
+        'field_fine_particles_matter' => strip_tags($data['pm2_5']['#markup']),
+        'field_coarse_particulate_matter' => strip_tags($data['pm10']['#markup']),
+        'field_ammonia' => strip_tags($data['nh3']['#markup']),
       ]);
       $node->save();
     // } while($is_ajax);

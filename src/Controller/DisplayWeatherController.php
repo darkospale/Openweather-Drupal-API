@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * The controller for the weather forecast routes.
  */
-class DisplayWeatherController extends ControllerBase {
+class DisplayWeatherController extends ControllerBase
+{
 
   /**
    * Build controller.
@@ -16,39 +17,49 @@ class DisplayWeatherController extends ControllerBase {
    * @return mixed
    *   Build controller.
    */
-  public function display() {
-//    if (isset($data)) {
+  public function display()
+  {
+    if(isset($_SESSION['form_values'])) {
       $data = $_SESSION['form_values'];
-      $build = \Drupal::service('get_weather')->makeRequest($data);
+      if (isset($data)) {
 
-      $build[] = [
-        '#theme' => 'openweathermap',
-        '#attached' => [
-          'library' => [
-            'openweathermap/openweathermap.display_weather',
+        // I will probably have to save it to $_SESSION
+        // Build is overwritten, need to assert the $times value every time just don't know how currently.
+        $times = $_SESSION['count'];
+        $build = [];
+        $build += [
+          $times => [
+            \Drupal::service('get_weather')->makeRequest($data),
           ],
-        ],
-        'actions' => [
-          '#type' => 'actions',
-          'submit' => [
-            '#type' => 'submit',
-            '#value' => 'Add another city',
+        ];
+
+        $build += [
+          '#attached' => [
+            'library' => [
+              'openweathermap/openweathermap.display_weather',
+            ],
           ],
-        ],
-      ];
-      // @todo Still left to redirect to form and then add multiple cities
-      return $build;
-//    }
-//    return $this->redirectPage();
+//          'actions' => [
+//            '#type' => 'submit',
+//            '#value' => 'Add another city',
+//            '#submit' => $this->redirectPage(),
+//          ],
+        ];
+        // @todo Still left to redirect to form and then add multiple cities
+        return $build;
+      }
+    }
+    return $this->redirectPage();
   }
 
   /**
    * Redirect page function.
    */
-//  public function redirectPage() {
-//    $path = '/weather-form';
-//    $response = new RedirectResponse($path);
-//    $response->send();
-//  }
+  public function redirectPage() {
+    $path = '/weather-form';
+    $response = new RedirectResponse($path);
+    $response->send();
+  }
+
 
 }
