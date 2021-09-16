@@ -42,3 +42,9 @@
   position: relative;
   margin: 0 auto;
 }
+
+.weather {
+  float: left;
+  width: 30%;
+  margin: 0 20px;
+}

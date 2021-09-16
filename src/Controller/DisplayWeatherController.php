@@ -17,38 +17,73 @@ class DisplayWeatherController extends ControllerBase
    * @return mixed
    *   Build controller.
    */
-  public function display()
-  {
-    if(isset($_SESSION['form_values'])) {
-      $data = $_SESSION['form_values'];
-      if (isset($data)) {
+  public function display() {
+    if (isset($_SESSION['form_values'])) {
 
-        // I will probably have to save it to $_SESSION
-        // Build is overwritten, need to assert the $times value every time just don't know how currently.
-        $times = $_SESSION['count'];
-        $build = [];
-        $build += [
-          $times => [
-            \Drupal::service('get_weather')->makeRequest($data),
-          ],
-        ];
+      $_SESSION['count']++;
+      $_SESSION['build']++;
 
-        $build += [
-          '#attached' => [
-            'library' => [
-              'openweathermap/openweathermap.display_weather',
+      if ($_SESSION['count'] == 1) {
+          $times = $_SESSION['count'];
+          $data[$times] = $_SESSION['form_values'];
+          $_SESSION['build'] = [
+            $times => [
+              '#prefix' => '<div class="weather">',
+              '#suffix' => '</div>',
+              \Drupal::service('get_weather')->makeRequest($data[$times]),
+              '#attached' => [
+                'library' => [
+                  'openweathermap/openweathermap.display_weather',
+                ],
+              ],
             ],
-          ],
+          ];
+        }
+        if ($_SESSION['count'] == 2) {
+          $times = $_SESSION['count'];
+          $data[$times] = $_SESSION['form_values'];
+          $_SESSION['build'] += [
+            $times => [
+              '#prefix' => '<div class="weather">',
+              '#suffix' => '</div>',
+              \Drupal::service('get_weather')->makeRequest($data[$times]),
+              '#attached' => [
+                'library' => [
+                  'openweathermap/openweathermap.display_weather',
+                ],
+              ],
+            ],
+          ];
+        }
+//        $form_class = '\Drupal\openweathermap\Form\DisplayWeatherForm';
+
+        if ($_SESSION['count'] == 3) {
+          $times = $_SESSION['count'];
+          $data[$times] = $_SESSION['form_values'];
+          $_SESSION['build'] += [
+            $times => [
+              '#prefix' => '<div class="weather">',
+              '#suffix' => '</div>',
+              \Drupal::service('get_weather')->makeRequest($data[$times]),
+              '#attached' => [
+                'library' => [
+                  'openweathermap/openweathermap.display_weather',
+                ],
+              ],
+//              'form' => \Drupal::formBuilder()->getForm($form_class),
+            ],
+          ];
+        }
+
 //          'actions' => [
 //            '#type' => 'submit',
 //            '#value' => 'Add another city',
 //            '#submit' => $this->redirectPage(),
 //          ],
-        ];
-        // @todo Still left to redirect to form and then add multiple cities
-        return $build;
-      }
+
+        return $_SESSION['build'];
     }
+
     return $this->redirectPage();
   }
 
@@ -60,6 +95,5 @@ class DisplayWeatherController extends ControllerBase
     $response = new RedirectResponse($path);
     $response->send();
   }
-
 
 }

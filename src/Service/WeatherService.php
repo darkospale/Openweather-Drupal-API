@@ -104,6 +104,9 @@ class WeatherService {
     $value['humidity'] = [
       '#markup' => 'Humidity: '.$build->main->humidity.' %<br>',
     ];
+    $value['wind_degrees'] = [
+      '#markup' => 'Degrees: '.$build->wind->deg.'°<br>',
+    ];
     $value['wind_speed'] = [
       '#markup' => 'Wind speed: '.$formatted_data['speed'].$formatted_data['speed_sign'].'<br>',
     ];
