@@ -24,8 +24,6 @@ class RemoveWeatherForm extends FormBase {
       '#value' => $this->t('Remove this city'),
     ];
 
-    $form['#attributes']['remove_id'] = $_SESSION['count'];
-
     return $form;
   }
 
@@ -33,11 +31,11 @@ class RemoveWeatherForm extends FormBase {
    * @inheritDoc
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $id = $form_state->getCompleteForm()['#attributes']['remove_id'];
-    unset($_SESSION['build'][$id]);
-
-    $_SESSION['build'] = array_values($_SESSION['build']);
-    unset($_SESSION['form_values']);
+    $times = $_SESSION['times'];
+    $remove_id = $_SESSION['build'][$times]['form'][$times]['#attributes']['remove_id'];
+    if($times == $remove_id) {
+      unset($_SESSION['build'][$times]);
+    }
   }
 
 }

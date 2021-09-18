@@ -2,6 +2,10 @@
 
 namespace Drupal\openweathermap\service;
 
+use Drupal\Core\Locale\CountryManagerInterface;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\Renderer;
+
 /**
  * WeatherService.
  */
@@ -28,6 +32,15 @@ class WeatherService {
    */
   protected $api_air_pollution_endpoint;
 
+  protected $renderer;
+
+  protected $countryManager;
+
+  public function __construct(Renderer $renderer, CountryManagerInterface $countryManager) {
+    $this->renderer = $renderer;
+    $this->countryManager = $countryManager;
+  }
+
   /**
    * Function that makes the API request calls.
    *
@@ -50,10 +63,6 @@ class WeatherService {
     $lon = $params['lon'];
     $units_of_measurement = $params['units_of_measurement'];
 
-//    if (isset($data['update_container']['update_interval'])) {
-//      // @todo call a callback function.
-//    }
-
     // Decode JSON for weather information.
     $weather_endpoint = $this->api_weather_endpoint . '?id=' . $city . '&appid=' . $this->api_key . '&units=' . $units_of_measurement;
     $request = \Drupal::httpClient()->request('GET', $weather_endpoint);
@@ -68,11 +77,14 @@ class WeatherService {
 
     $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
 
+    // Convert country name accronym to full name
+    $country_name = $this->countryManager->getList()[$build->sys->country];
+
     $value['country_image'] = [
       '#markup' => '<img src=/sites/default/files/weather-icons/flags/'.strtolower($build->sys->country).'.png><br>',
     ];
     $value['country'] = [
-      '#markup' => $build->sys->country,
+      '#markup' => $country_name,
     ];
     $value['city'] = [
       '#markup' => '<h2>'.$build->name.'</h2><br>',
@@ -155,6 +167,54 @@ class WeatherService {
 
     // Call a service for creating nodes.
     \Drupal::service('create_node')->createNode($value);
+
+    if ($params['update_periodically'] == 1) {
+
+      $sendAfter = ($params['update_interval'])*(60); // in seconds
+      $sendMail = false;
+      $now = date('Y-m-d H:i:s');
+      if (!isset($_SESSION['sent_time'])) { // if you are first time send email
+        $sendMail = true;
+        $_SESSION['sent_time'] = $now;
+      }
+      else {
+        $diff = strtotime($now) - strtotime($_SESSION['sent_time']);
+        if($diff >= $sendAfter) { // if difference is more than 10 min then only send mail
+          $sendMail = true;
+          $_SESSION['sent_time'] = $now;
+        }
+      }
+
+      $module = 'openweathermap';
+      $key = 'openweathermap_mail_theme';
+      $langcode = \Drupal::currentUser()->getPreferredLangcode();
+      $user = \Drupal::currentUser()->getEmail();
+      $date = date('H:i:s d.m.Y.', time());
+      $title = 'Country: ' . $value['country']['#markup'] . ', City: ' . $value['city']['#markup'] . ', Date: ' . $date;
+
+      $params = [
+        'headers' => [
+          'Content-Type' => 'text/html; charset=UTF-8;',
+          'Content-Transfer-Encoding' => '8Bit',
+        ],
+        'from' => 'Openweathermap <openweathermap@openweathermap.com>',
+        'subject' => $title,
+      ];
+
+      $build = [
+        '#theme' => 'openweathermap_mail_theme',
+        '#body' => $value,
+      ];
+
+      $params['body'] = $this->renderer->executeInRenderContext(new RenderContext(), function () use ($build) {
+        return $this->renderer->render($build);
+      });
+
+      $mailManager = \Drupal::service('plugin.manager.mail');
+      if($sendMail) {
+        $mailManager->mail($module, $key, $user, $langcode, $params, NULL, TRUE);
+      }
+    }
 
     return $value;
   }

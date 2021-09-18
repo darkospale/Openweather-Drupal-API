@@ -14,6 +14,7 @@ services:
 
   get_weather:
     class: Drupal\openweathermap\Service\WeatherService
+    arguments: ['@renderer', '@country_manager']
 
   form_data:
     class: Drupal\openweathermap\Service\DataFormat

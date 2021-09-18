@@ -3,6 +3,7 @@
 namespace Drupal\openweathermap\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -21,24 +22,25 @@ class DisplayWeatherController extends ControllerBase {
       $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
 
       $times = $_SESSION['count'];
-      $data[$times] = $_SESSION['form_values'];
+      $data = $_SESSION['form_values'];
       $_SESSION['build'] += [
         $times => [
           '#prefix' => '<div class="weather">',
           '#suffix' => '</div>',
-          \Drupal::service('get_weather')->makeRequest($data[$times]),
+          \Drupal::service('get_weather')->makeRequest($data),
           '#attached' => [
             'library' => [
               'openweathermap/openweathermap.display_weather',
             ],
           ],
-          $times => [
-            'form' => [
-              \Drupal::formBuilder()->getForm($form_class),
-            ],
+          'form' => [
+            $times => \Drupal::formBuilder()->getForm($form_class),
           ],
         ],
       ];
+      $_SESSION['times'] = $times;
+
+      $_SESSION['build'][$times]['form'][$times]['#attributes']['remove_id'] = $_SESSION['times'];
 
       return $_SESSION['build'];
     }

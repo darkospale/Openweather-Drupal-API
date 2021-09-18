@@ -23,6 +23,23 @@ function openweathermap_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+function openweathermap_mail($key, &$message, $params) {
+
+  if (isset($params['headers'])) {
+    $message['headers'] = array_merge($message['headers'], $params['headers']);
+  }
+
+  switch ($key) {
+    case 'openweathermap_mail_theme':
+      $message['from'] = $params['from'];
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['body'];
+      break;
+
+  }
+}
+
+
 /**
  * Implements hook_theme().
  */
@@ -37,25 +54,57 @@ function openweathermap_theme($existing, $type, $theme, $path) {
       // Optionally define path to Twig template files. Defaults to the module's ./templates/ directory.
       'path' => $path . '/templates',
       // Optionally define variables that will be passed to the Twig template and set default values for them.
+      'variables' => [],
+    ],
+    'openweathermap_mail_theme' => [
+      'render element' => 'children',
+      // If no template name is defined here, it defaults to the name of the theme hook, ie. module-name-theme-hook.html.twig
+      'template' => 'openweathermap-mail',
+      // Optionally define path to Twig template files. Defaults to the module's ./templates/ directory.
+      'path' => $path . '/templates',
+      // Optionally define variables that will be passed to the Twig template and set default values for them.
       'variables' => [
-        'variable1' => 'Yet another default text.',
-        'variable2' => 0,
-        'variable3' => [0, 0, 0],
+        'body' => 'body',
       ],
     ],
-//    'openweathermap_controller_theme' => [
-//      'render element' => 'children',
-//      // If no template name is defined here, it defaults to the name of the theme hook, ie. module-name-theme-hook.html.twig
-//      'template' => 'openweathermap-controller',
-//      // Optionally define path to Twig template files. Defaults to the module's ./templates/ directory.
-//      'path' => $path . '/templates',
-//      // Optionally define variables that will be passed to the Twig template and set default values for them.
-//      'variables' => [
-//        'variable1' => 'Yet another default text.',
-//        'variable2' => 0,
-//        'variable3' => [0, 0, 0],
-//      ],
-//    ],
   ];
 
 }
+
+///**
+// * Implements hook_cron().
+// */
+//function openweathermap_cron() {
+//  // Long-running operation example, leveraging a queue:
+//  // Fetch data from other sites.
+//  $result = array('webservice result as array here');
+//  $queue = DrupalQueue::get('daily_email');
+//  foreach ($result as $item) {
+//    $queue->createItem($item);
+//  }
+//}
+//
+///**
+// * Implements hook_cron_queue_info().
+// */
+//function openweathermap_cron_queue_info() {
+//  $queues['daily_email'] = array(
+//    'worker callback' => '_daily_email',
+//  );
+//  $queues['weekly_email'] = array(
+//    'worker callback' => '_weekly_email',
+//  );
+//  return $queues;
+//}
+//
+//
+//function _daily_email($item) {
+//  // Do your stuff here
+//  // Send emails, etc ...
+//}
+//
+//function _weekly_email($item) {
+//  // Do other stuff here
+//  // Send emails, etc ...
+//}
+

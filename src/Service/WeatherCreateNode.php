@@ -52,14 +52,6 @@ class WeatherCreateNode {
    */
   public function createNode($data){
 
-    $country_name = $data['country']['#markup'];
-
-    if ($country_name) {
-      $country_name = $this->countryManager->getList()[$country_name];
-    }
-    else {
-      $country_name = '';
-    }
     $city_name = strip_tags($data['city']['#markup']);
 
     // $is_ajax = \Drupal::request()->isXmlHttpRequest();
@@ -77,13 +69,13 @@ class WeatherCreateNode {
       $uid = $user->id();
     }
 
-    $title = 'Country: ' . $country_name . ', City: ' . $city_name . ', Date: ' . $date;
+    $title = 'Country: ' . $data['country']['#markup'] . ', City: ' . $city_name . ', Date: ' . $date;
 
       $node = $node_storage->create([
         'uid' => $uid,
         'type' => 'weather_info',
         'title' => $title,
-        'field_country' => $country_name,
+        'field_country' => $data['country']['#markup'],
         'field_city' => $city_name,
         'field_description' => strip_tags($data['description']['#markup']),
         'field_temperature' => strip_tags($data['temp']['#markup']),
