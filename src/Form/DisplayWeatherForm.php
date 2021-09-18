@@ -104,6 +104,7 @@ class DisplayWeatherForm extends FormBase {
         'callback' => '::changeCountryAjaxCallback',
         'wrapper' => 'city-select-wrapper',
       ],
+      '#validated' => TRUE,
     ];
 
     $form['city'] = [
@@ -253,6 +254,12 @@ class DisplayWeatherForm extends FormBase {
     if (empty($form_state->getValue('city'))) {
       $form_state->setErrorByName('city', $this->t('The "City" field is required.'));
     }
+    if (empty($form_state->getValue('country'))) {
+      $form_state->setErrorByName('country', $this->t('The "Country" field is required.'));
+    }
+    if (empty($form_state->getValue('units_of_measurement'))) {
+      $form_state->setErrorByName('units_of_measurement', $this->t('The "Units of measurement" field is required.'));
+    }
   }
 
   /**
@@ -265,10 +272,17 @@ class DisplayWeatherForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    if ($_SESSION['count'] < 3) {
-        $_SESSION['form_values'] = $form_state;
-        $this->redirectPage();
+    if (!isset($_SESSION['count'])) {
+      $_SESSION['count'] = 0;
     }
+    if (!isset($_SESSION['build'])) {
+      $_SESSION['build'] = [];
+    }
+//    if (count($_SESSION['build']) > 6) {
+      $_SESSION['count']++;
+      $_SESSION['form_values'] = $form_state;
+      $this->redirectPage();
+//    }
   }
 
 }

@@ -37,7 +37,7 @@ class DataFormat {
     }
 
     // North.
-    if($build->wind->deg >= 338 && $build->wind->deg <= 22) {
+    if(($build->wind->deg >= 338 && $build->wind->deg <= 360) || ($build->wind->deg >= 0 && $build->wind->deg <= 22)) {
       $wind_icon = 'wind-s.jpg';
       $wind_direction = 'North';
     }
