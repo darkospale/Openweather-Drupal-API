@@ -83,6 +83,22 @@ class WeatherCreateNode {
       'field_fine_particles_matter' => strip_tags($data['pm2_5']['#markup']),
       'field_coarse_particulate_matter' => strip_tags($data['pm10']['#markup']),
       'field_ammonia' => strip_tags($data['nh3']['#markup']),
+      'field_google_map' => [
+        0 => [
+          'name' => $title,
+          'lat' => $data['#attached']['lat'],
+          'lon' => $data['#attached']['lon'],
+          'zoom' => '9',
+          'type' => 'roadmap',
+          'width' => '100%',
+          'height' => '450px',
+          'marker' => '1',
+          'traffic' => '0',
+          'marker_icon' => '',
+          'controls' => '1',
+          'infowindow' => '',
+        ],
+      ],
     ]);
     $node->save();
   }

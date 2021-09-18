@@ -170,12 +170,9 @@ class WeatherService {
       $value['nh3'] = [
         '#markup' => 'Ammonia: ' . $build_air_pollution->list[0]->components->nh3 . ' μg/m3<br>',
       ];
-//      $value['map'] = [
-//        '#markup' => '<div id="map"></div>',
-//      ];
-      // Send the lat and lon data to javascript.
-//      $value['#attached']['drupalSettings']['lat'] = $build->coord->lat;
-//      $value['#attached']['drupalSettings']['lon'] = $build->coord->lon;
+      // Send the lat and lon data to node.
+      $value['#attached']['lat'] = $lat;
+      $value['#attached']['lon'] = $lon;
 
       // Call a service for creating a node.
       \Drupal::service('create_node')->createNode($value);
