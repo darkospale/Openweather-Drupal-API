@@ -280,6 +280,7 @@ class DisplayWeatherForm extends FormBase {
     }
 //    if (count($_SESSION['build']) > 6) {
       $_SESSION['count']++;
+//      $count = $_SESSION['count'];
       $_SESSION['form_values'] = $form_state;
       $this->redirectPage();
 //    }

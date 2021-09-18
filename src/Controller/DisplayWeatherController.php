@@ -21,10 +21,10 @@ class DisplayWeatherController extends ControllerBase {
     if (isset($_SESSION['form_values'])) {
       $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
 
-      $times = $_SESSION['count'];
+      $count = $_SESSION['count'];
       $data = $_SESSION['form_values'];
       $_SESSION['build'] += [
-        $times => [
+        $count => [
           '#prefix' => '<div class="weather">',
           '#suffix' => '</div>',
           \Drupal::service('get_weather')->makeRequest($data),
@@ -34,13 +34,13 @@ class DisplayWeatherController extends ControllerBase {
             ],
           ],
           'form' => [
-            $times => \Drupal::formBuilder()->getForm($form_class),
+            $count => \Drupal::formBuilder()->getForm($form_class),
           ],
         ],
       ];
-      $_SESSION['times'] = $times;
+      $_SESSION['times'] = $count;
 
-      $_SESSION['build'][$times]['form'][$times]['#attributes']['remove_id'] = $_SESSION['times'];
+      $_SESSION['build'][$count]['form'][$count]['#attributes']['remove_id'] = $_SESSION['times'];
 
       return $_SESSION['build'];
     }

@@ -77,7 +77,7 @@ class WeatherService {
 
     $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
 
-    // Convert country name accronym to full name
+    // Convert country name acronym to full name
     $country_name = $this->countryManager->getList()[$build->sys->country];
 
     $value['country_image'] = [
