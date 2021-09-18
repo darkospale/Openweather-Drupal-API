@@ -19,23 +19,23 @@ interface CityManagerInterface {
    * Get info about all cities of a country from the 'city.list.json' file.
    *
    * @param string $country_code
-   *   A country code.
+   *   Country code.
    *
    * @return array
-   *   An array with info about all cities of a country of city.
+   *   Array with info about all cities of a country of city.
    */
   public function getCitiesByCountryCode($country_code);
 
   /**
-   * Get a city id from the 'city.list.json' file.
+   * Get a city ID from the 'city.list.json' file.
    *
    * @param string $country_code
-   *   A country code.
+   *   Country code.
    * @param string $city_name
-   *   A name of a city.
+   *   Name of a city.
    *
    * @return string|bool
-   *   A a city id or FALSE if a city was not found.
+   *   Get a city ID or FALSE if a city was not found.
    */
   public function getCityId($country_code, $city_name);
 }

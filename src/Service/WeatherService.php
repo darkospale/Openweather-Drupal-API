@@ -36,7 +36,6 @@ class WeatherService {
    * Renderer used to render email content.
    *
    * @var Renderer
-   *   Render all the email content and variables.
    */
   protected $renderer;
 
@@ -44,7 +43,6 @@ class WeatherService {
    * Country Manager Interface.
    *
    * @var CountryManagerInterface
-   *   Use it here for displaying the full country name on page and email.
    */
   protected $countryManager;
 
@@ -97,7 +95,7 @@ class WeatherService {
 
       // Call the function that formats the values depending on what system has been selected.
       $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
-      // Convert country name acronym to full name
+      // Convert country name acronym to full name.
       $country_name = $this->countryManager->getList()[$build->sys->country];
 
       $value['country_image'] = [
@@ -175,14 +173,14 @@ class WeatherService {
 //      $value['map'] = [
 //        '#markup' => '<div id="map"></div>',
 //      ];
-      // Send the lat and lon data to javascript
+      // Send the lat and lon data to javascript.
 //      $value['#attached']['drupalSettings']['lat'] = $build->coord->lat;
 //      $value['#attached']['drupalSettings']['lon'] = $build->coord->lon;
 
       // Call a service for creating a node.
       \Drupal::service('create_node')->createNode($value);
 
-      // If the update periodically checkbox is checked, send mails and refresh page @todo
+      //  @todo If the update periodically checkbox is checked, send mails and refresh page.
       if ($params['update_periodically'] == 1) {
         $module = 'openweathermap';
         $key = 'openweathermap_mail_theme';
@@ -200,6 +198,7 @@ class WeatherService {
           'subject' => $title,
         ];
 
+        // This part calls for template and send $value values in order to render them.
         $build = [
           '#theme' => 'openweathermap_mail_theme',
           '#body' => $value,
@@ -212,7 +211,11 @@ class WeatherService {
         $mailManager = \Drupal::service('plugin.manager.mail');
         $mailManager->mail($module, $key, $user, $langcode, $params, NULL, TRUE);
 
-        sleep(2);
+        // Pause for 1 second before iterating through next loop.
+        // This is needed in order to not lose some data in the process.
+        // Also some servers have a limit of how many mails they can send
+        // in one minute, so this is a good practice also.
+        sleep(1);
       }
 
       return $value;

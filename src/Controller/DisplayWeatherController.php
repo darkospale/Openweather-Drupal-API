@@ -17,31 +17,33 @@ class DisplayWeatherController extends ControllerBase {
    */
   public function display() {
     if (isset($_SESSION['form_values'])) {
-      $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
+      if(!empty($_SESSION['form_values'])) {
+        $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
 
-      foreach($_SESSION['form_values'] as $key => $data) {
-        $call = [
-          $key => $data,
-        ];
-        $_SESSION['build'] += [
-          $key => [
-            '#prefix' => '<div class="weather">',
-            '#suffix' => '</div>',
-            \Drupal::service('get_weather')->makeRequest($call),
-            '#attached' => [
-              'library' => [
-                'openweathermap/openweathermap.display_weather',
+        foreach ($_SESSION['form_values'] as $key => $data) {
+          $call = [
+            $key => $data,
+          ];
+          $_SESSION['build'] += [
+            $key => [
+              '#prefix' => '<div class="weather">',
+              '#suffix' => '</div>',
+              \Drupal::service('get_weather')->makeRequest($call),
+              '#attached' => [
+                'library' => [
+                  'openweathermap/openweathermap.display_weather',
+                ],
+              ],
+              'form' => [
+                $key => \Drupal::formBuilder()->getForm($form_class),
               ],
             ],
-            'form' => [
-              $key => \Drupal::formBuilder()->getForm($form_class),
-            ],
-          ],
-          $_SESSION['key'] = $key,
-        ];
-      }
+//            $_SESSION['key'] = $key,
+          ];
+        }
 
-      return $_SESSION['build'];
+        return $_SESSION['build'];
+      }
     }
     $build = [
       '#theme' => 'openweathermap_controller_theme',

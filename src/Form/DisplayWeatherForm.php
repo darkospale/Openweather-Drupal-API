@@ -13,33 +13,38 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class DisplayWeatherForm extends FormBase {
 
   /**
-   * City manager service.
-   *
-   * @var \Drupal\openweathermap\CityManagerInterface
-   */
-  protected $cityManager;
-
-  /**
    * All countries from the 'city.list.json' file.
    *
    * @var array
+   *   Returns all the countries in array.
    */
   protected $countries;
 
   /**
+   * City manager service.
+   *
+   * @var \Drupal\openweathermap\CityManagerInterface
+   *   Returns all the cities in array.
+   */
+  protected $cityManager;
+
+  /**
    * @var Drupal\openweathermap\Service\WeatherService
+   *   Weather Service class.
    */
   protected $weatherService;
 
   /**
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   Container Dependency Injection class.
    *
    * @return \Drupal\openweathermap\Form\DisplayWeatherForm
+   *   Returns instances of dependency injection.
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
-    $instance->cityManager = $container->get('city_manager');
     $instance->countries = $instance->cityManager->getCountries();
+    $instance->cityManager = $container->get('city_manager');
     $instance->weatherService = $container->get('get_weather');
 
     return $instance;
@@ -57,12 +62,10 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
     // Attaching the select2 library in order to be able to select countries and cities from the city.list.json
     $form['#attached']['library'] = 'openweathermap/openweathermap.select2_for_settings_form';
 
     if (isset($form_state->getUserInput()['country'])) {
-
       $country_code = $form_state->getUserInput()['country'];
       $city_id = $form_state->getUserInput()['city'];
     }
@@ -72,7 +75,6 @@ class DisplayWeatherForm extends FormBase {
     }
 
     if (isset($form_state->getUserInput()['city'])) {
-
       $city_id = $form_state->getUserInput()['city'];
       $lat = $form_state->getUserInput()['lat'];
       $lon = $form_state->getUserInput()['lon'];
@@ -104,9 +106,9 @@ class DisplayWeatherForm extends FormBase {
         'callback' => '::changeCountryAjaxCallback',
         'wrapper' => 'city-select-wrapper',
       ],
+      // To prevent the error message: "An illegal choice has been detected...".
       '#validated' => TRUE,
     ];
-
     $form['city'] = [
       '#type' => 'select',
       '#title' => $this->t('City'),
@@ -124,7 +126,6 @@ class DisplayWeatherForm extends FormBase {
       // To prevent the error message: "An illegal choice has been detected...".
       '#validated' => TRUE,
     ];
-
     $form['lat_lon_container'] = [
       '#type' => 'fieldset',
       '#prefix' => '<div id="edit-lat-lon-wrapper">',
@@ -133,23 +134,19 @@ class DisplayWeatherForm extends FormBase {
         'style' => 'display: none;',
       ],
     ];
-
     $form['lat_lon_container']['lat'] = [
       '#type' => 'textfield',
       '#default_value' => $lat,
       '#validated' => TRUE,
     ];
-
     $form['lat_lon_container']['lon'] = [
       '#type' => 'textfield',
       '#default_value' => $lon,
       '#validated' => TRUE,
     ];
-
     $form['units_container'] = [
       '#type' => 'fieldset',
     ];
-
     $form['units_container']['units_of_measurement'] = [
       '#type' => 'select',
       '#title' => $this->t('Units of measurement'),
@@ -161,18 +158,15 @@ class DisplayWeatherForm extends FormBase {
       '#default_value' => $units_measurement,
       '#required' => TRUE,
     ];
-
     $form['update_container'] = [
       '#type' => 'fieldset',
     ];
-
     $form['update_container']['update_periodically'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Update periodically'),
       '#description' => $this->t('If it is set, then a weather forecast data will be updated at the specified time interval.'),
       '#default_value' => $form_state->getValue('update_periodically'),
     ];
-
     $form['update_container']['update_interval'] = [
       '#type' => 'number',
       '#title' => $this->t('Update interval in minutes'),
@@ -184,7 +178,6 @@ class DisplayWeatherForm extends FormBase {
         ],
       ],
     ];
-
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Search for the location'),
@@ -247,7 +240,6 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritDoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
     if (empty($form_state->getValue('city'))) {
       $form_state->setErrorByName('city', $this->t('The "City" field is required.'));
     }
@@ -263,7 +255,7 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
+    // Checks if the values in session have been set, warning suppression.
     if (!isset($_SESSION['count'])) {
       $_SESSION['count'] = 0;
     }

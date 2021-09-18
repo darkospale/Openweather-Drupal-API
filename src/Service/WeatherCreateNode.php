@@ -2,7 +2,6 @@
 
 namespace Drupal\openweathermap\Service;
 
-use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\openweathermap\CityManagerInterface;
@@ -13,7 +12,6 @@ class WeatherCreateNode {
    * Country manager.
    *
    * @var Drupal\Core\Locale\CountryManagerInterface
-   *   Country manager class.
    */
   protected $country_manager;
 
@@ -21,7 +19,6 @@ class WeatherCreateNode {
    * City manager.
    *
    * @var Drupal\openweathermap\CityManagerInterface
-   *   City manager class.
    */
   protected $city_manager;
 

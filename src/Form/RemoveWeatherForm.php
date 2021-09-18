@@ -4,7 +4,6 @@ namespace Drupal\openweathermap\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RemoveWeatherForm extends FormBase {
 
