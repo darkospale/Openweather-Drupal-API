@@ -54,13 +54,8 @@ class WeatherCreateNode {
 
     $city_name = strip_tags($data['city']['#markup']);
 
-    // $is_ajax = \Drupal::request()->isXmlHttpRequest();
-
-    // dsm($is_ajax);
-
     $date = date('H:i:s d.m.Y.', time());
 
-  // do{
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
     $currentUser = User::load(\Drupal::currentUser()->id());
@@ -71,33 +66,32 @@ class WeatherCreateNode {
 
     $title = 'Country: ' . $data['country']['#markup'] . ', City: ' . $city_name . ', Date: ' . $date;
 
-      $node = $node_storage->create([
-        'uid' => $uid,
-        'type' => 'weather_info',
-        'title' => $title,
-        'field_country' => $data['country']['#markup'],
-        'field_city' => $city_name,
-        'field_description' => strip_tags($data['description']['#markup']),
-        'field_temperature' => strip_tags($data['temp']['#markup']),
-        'field_feels_like' => strip_tags($data['feels_like']['#markup']),
-        'field_minimum_temperature' => strip_tags($data['temp_min']['#markup']),
-        'field_maximum_temperature' => strip_tags($data['temp_max']['#markup']),
-        'field_pressure' => strip_tags($data['pressure']['#markup']),
-        'field_humidity' => strip_tags($data['humidity']['#markup']),
-        'field_wind_speed' => strip_tags($data['wind_speed']['#markup']),
-        'field_wind_direction' => strip_tags($data['wind_direction']['#markup']),
-        'field_air_pollution_index' => strip_tags($data['aqi']['#markup']),
-        'field_carbon_monoxide' => strip_tags($data['co']['#markup']),
-        'field_nitrogen_monoxide' => strip_tags($data['no']['#markup']),
-        'field_nitrogen_dioxide' => strip_tags($data['no2']['#markup']),
-        'field_ozone' => strip_tags($data['o3']['#markup']),
-        'field_sulphur_dioxide' => strip_tags($data['so2']['#markup']),
-        'field_fine_particles_matter' => strip_tags($data['pm2_5']['#markup']),
-        'field_coarse_particulate_matter' => strip_tags($data['pm10']['#markup']),
-        'field_ammonia' => strip_tags($data['nh3']['#markup']),
-      ]);
-      $node->save();
-    // } while($is_ajax);
+    $node = $node_storage->create([
+      'uid' => $uid,
+      'type' => 'weather_info',
+      'title' => $title,
+      'field_country' => $data['country']['#markup'],
+      'field_city' => $city_name,
+      'field_description' => strip_tags($data['description']['#markup']),
+      'field_temperature' => strip_tags($data['temp']['#markup']),
+      'field_feels_like' => strip_tags($data['feels_like']['#markup']),
+      'field_minimum_temperature' => strip_tags($data['temp_min']['#markup']),
+      'field_maximum_temperature' => strip_tags($data['temp_max']['#markup']),
+      'field_pressure' => strip_tags($data['pressure']['#markup']),
+      'field_humidity' => strip_tags($data['humidity']['#markup']),
+      'field_wind_speed' => strip_tags($data['wind_speed']['#markup']),
+      'field_wind_direction' => strip_tags($data['wind_direction']['#markup']),
+      'field_air_pollution_index' => strip_tags($data['aqi']['#markup']),
+      'field_carbon_monoxide' => strip_tags($data['co']['#markup']),
+      'field_nitrogen_monoxide' => strip_tags($data['no']['#markup']),
+      'field_nitrogen_dioxide' => strip_tags($data['no2']['#markup']),
+      'field_ozone' => strip_tags($data['o3']['#markup']),
+      'field_sulphur_dioxide' => strip_tags($data['so2']['#markup']),
+      'field_fine_particles_matter' => strip_tags($data['pm2_5']['#markup']),
+      'field_coarse_particulate_matter' => strip_tags($data['pm10']['#markup']),
+      'field_ammonia' => strip_tags($data['nh3']['#markup']),
+    ]);
+    $node->save();
   }
 
 }

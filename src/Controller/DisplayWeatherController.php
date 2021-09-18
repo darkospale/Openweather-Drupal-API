@@ -19,29 +19,32 @@ class DisplayWeatherController extends ControllerBase {
    */
   public function display() {
     if (isset($_SESSION['form_values'])) {
+      $count = $_SESSION['count'];
       $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
 
-      $count = $_SESSION['count'];
-      $data = $_SESSION['form_values'];
-      $_SESSION['build'] += [
-        $count => [
-          '#prefix' => '<div class="weather">',
-          '#suffix' => '</div>',
-          \Drupal::service('get_weather')->makeRequest($data),
-          '#attached' => [
-            'library' => [
-              'openweathermap/openweathermap.display_weather',
+      foreach($_SESSION['form_values'] as $key => $data) {
+        $call = [
+          $key => $data,
+        ];
+        $_SESSION['build'] += [
+          $count => [
+            '#prefix' => '<div class="weather">',
+            '#suffix' => '</div>',
+            \Drupal::service('get_weather')->makeRequest($call),
+            '#attached' => [
+              'library' => [
+                'openweathermap/openweathermap.display_weather',
+              ],
+            ],
+            'form' => [
+              $count => \Drupal::formBuilder()->getForm($form_class),
             ],
           ],
-          'form' => [
-            $count => \Drupal::formBuilder()->getForm($form_class),
-          ],
-        ],
-      ];
-      $_SESSION['times'] = $count;
+        ];
+        $_SESSION['times'] = $count;
 
-      $_SESSION['build'][$count]['form'][$count]['#attributes']['remove_id'] = $_SESSION['times'];
-
+        $_SESSION['build'][$count]['form'][$count]['#attributes']['remove_id'] = $_SESSION['times'];
+      }
       return $_SESSION['build'];
     }
     $build = [
