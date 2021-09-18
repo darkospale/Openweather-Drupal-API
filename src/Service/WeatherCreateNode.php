@@ -53,17 +53,13 @@ class WeatherCreateNode {
   public function createNode($data){
 
     $city_name = strip_tags($data['city']['#markup']);
-
     $date = date('H:i:s d.m.Y.', time());
-
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-
     $currentUser = User::load(\Drupal::currentUser()->id());
     $uid = 1;
     if ($user = $currentUser) {
       $uid = $user->id();
     }
-
     $title = 'Country: ' . $data['country']['#markup'] . ', City: ' . $city_name . ', Date: ' . $date;
 
     $node = $node_storage->create([

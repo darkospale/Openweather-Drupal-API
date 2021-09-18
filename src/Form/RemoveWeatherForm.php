@@ -31,11 +31,10 @@ class RemoveWeatherForm extends FormBase {
    * @inheritDoc
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $times = $_SESSION['times'];
-    $remove_id = $_SESSION['build'][$times]['form'][$times]['#attributes']['remove_id'];
-    if($times == $remove_id) {
-      unset($_SESSION['build'][$times]);
-    }
+    $key = $_SESSION['key'];
+    $remove_id = $_SESSION['build'][$key]['form'][$key]['#attributes']['remove_id'];
+    unset($_SESSION['build'][$key]);
+    unset($_SESSION['form_values'][$remove_id]);
   }
 
 }

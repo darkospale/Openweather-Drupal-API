@@ -19,6 +19,7 @@ class DataFormat {
    */
   public function formData($units_of_measurement, $build, $build_air_pollution) {
 
+    // Set the unit signs based on chosen metric system.
     switch ($units_of_measurement) {
       case 'metric':
         $temp_sign = '°C';
@@ -77,7 +78,7 @@ class DataFormat {
       $wind_direction = 'North-west';
     }
 
-    // Air quality index info.
+    // Air quality index detailed info.
     switch ($build_air_pollution->list[0]->main->aqi) {
       case 1:
         $index_description = 'Good';

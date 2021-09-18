@@ -3,8 +3,6 @@
 namespace Drupal\openweathermap\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The controller for the weather forecast routes.
@@ -12,14 +10,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class DisplayWeatherController extends ControllerBase {
 
   /**
-   * Build controller.
+   * Display controller.
    *
-   * @return mixed
-   *   Build controller.
+   * @return array|mixed
+   *   Return the controller display.
    */
   public function display() {
     if (isset($_SESSION['form_values'])) {
-      $count = $_SESSION['count'];
       $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
 
       foreach($_SESSION['form_values'] as $key => $data) {
@@ -27,7 +24,7 @@ class DisplayWeatherController extends ControllerBase {
           $key => $data,
         ];
         $_SESSION['build'] += [
-          $count => [
+          $key => [
             '#prefix' => '<div class="weather">',
             '#suffix' => '</div>',
             \Drupal::service('get_weather')->makeRequest($call),
@@ -37,14 +34,13 @@ class DisplayWeatherController extends ControllerBase {
               ],
             ],
             'form' => [
-              $count => \Drupal::formBuilder()->getForm($form_class),
+              $key => \Drupal::formBuilder()->getForm($form_class),
             ],
           ],
+          $_SESSION['key'] = $key,
         ];
-        $_SESSION['times'] = $count;
-
-        $_SESSION['build'][$count]['form'][$count]['#attributes']['remove_id'] = $_SESSION['times'];
       }
+
       return $_SESSION['build'];
     }
     $build = [

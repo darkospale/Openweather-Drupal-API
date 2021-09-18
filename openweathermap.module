@@ -18,33 +18,30 @@ function openweathermap_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Retrieves weather forecast data from openweathermap.org and displays on the page.') . '</p>';
       return $output;
-
     default:
   }
 }
 
+/**
+ * Implements hook_mail().
+ */
 function openweathermap_mail($key, &$message, $params) {
-
   if (isset($params['headers'])) {
     $message['headers'] = array_merge($message['headers'], $params['headers']);
   }
-
   switch ($key) {
     case 'openweathermap_mail_theme':
       $message['from'] = $params['from'];
       $message['subject'] = $params['subject'];
       $message['body'][] = $params['body'];
       break;
-
   }
 }
-
 
 /**
  * Implements hook_theme().
  */
 function openweathermap_theme($existing, $type, $theme, $path) {
-
   return [
     // Name of the theme hook. This is used in the controller to trigger the hook.
     'openweathermap_controller_theme' => [
@@ -68,43 +65,4 @@ function openweathermap_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
-
 }
-
-///**
-// * Implements hook_cron().
-// */
-//function openweathermap_cron() {
-//  // Long-running operation example, leveraging a queue:
-//  // Fetch data from other sites.
-//  $result = array('webservice result as array here');
-//  $queue = DrupalQueue::get('daily_email');
-//  foreach ($result as $item) {
-//    $queue->createItem($item);
-//  }
-//}
-//
-///**
-// * Implements hook_cron_queue_info().
-// */
-//function openweathermap_cron_queue_info() {
-//  $queues['daily_email'] = array(
-//    'worker callback' => '_daily_email',
-//  );
-//  $queues['weekly_email'] = array(
-//    'worker callback' => '_weekly_email',
-//  );
-//  return $queues;
-//}
-//
-//
-//function _daily_email($item) {
-//  // Do your stuff here
-//  // Send emails, etc ...
-//}
-//
-//function _weekly_email($item) {
-//  // Do other stuff here
-//  // Send emails, etc ...
-//}
-

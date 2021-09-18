@@ -32,10 +32,31 @@ class WeatherService {
    */
   protected $api_air_pollution_endpoint;
 
+  /**
+   * Renderer used to render email content.
+   *
+   * @var Renderer
+   *   Render all the email content and variables.
+   */
   protected $renderer;
 
+  /**
+   * Country Manager Interface.
+   *
+   * @var CountryManagerInterface
+   *   Use it here for displaying the full country name on page and email.
+   */
   protected $countryManager;
 
+  /**
+   * Constructor.
+   *
+   * @param Renderer $renderer
+   *   Renderer class.
+   *
+   * @param CountryManagerInterface $countryManager
+   *   Country Manager class.
+   */
   public function __construct(Renderer $renderer, CountryManagerInterface $countryManager) {
     $this->renderer = $renderer;
     $this->countryManager = $countryManager;
@@ -50,17 +71,13 @@ class WeatherService {
    * @return array
    */
   public function makeRequest($data) {
-
     $config = \Drupal::config('openweathermap.settings');
-
     $this->api_key = $config->get('api_key');
     $this->api_weather_endpoint = $config->get('api_weather_endpoint');
     $this->api_air_pollution_endpoint = $config->get('api_air_pollution_endpoint');
 
     foreach ($data as $call) {
-
       $params = $call->getValues();
-
       $city = $params['city'];
       $lat = $params['lat'];
       $lon = $params['lon'];
@@ -80,7 +97,6 @@ class WeatherService {
 
       // Call the function that formats the values depending on what system has been selected.
       $formatted_data = \Drupal::service('form_data')->formData($units_of_measurement, $build, $build_air_pollution);
-
       // Convert country name acronym to full name
       $country_name = $this->countryManager->getList()[$build->sys->country];
 
@@ -160,12 +176,13 @@ class WeatherService {
 //        '#markup' => '<div id="map"></div>',
 //      ];
       // Send the lat and lon data to javascript
-      $value['#attached']['drupalSettings']['lat'] = $build->coord->lat;
-      $value['#attached']['drupalSettings']['lon'] = $build->coord->lon;
+//      $value['#attached']['drupalSettings']['lat'] = $build->coord->lat;
+//      $value['#attached']['drupalSettings']['lon'] = $build->coord->lon;
 
-      // Call a service for creating nodes.
+      // Call a service for creating a node.
       \Drupal::service('create_node')->createNode($value);
 
+      // If the update periodically checkbox is checked, send mails and refresh page @todo
       if ($params['update_periodically'] == 1) {
         $module = 'openweathermap';
         $key = 'openweathermap_mail_theme';

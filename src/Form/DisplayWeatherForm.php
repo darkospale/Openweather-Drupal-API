@@ -41,6 +41,7 @@ class DisplayWeatherForm extends FormBase {
     $instance->cityManager = $container->get('city_manager');
     $instance->countries = $instance->cityManager->getCountries();
     $instance->weatherService = $container->get('get_weather');
+
     return $instance;
   }
 
@@ -48,6 +49,7 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+
     return 'openweathermap.weather_form';
   }
 
@@ -59,8 +61,6 @@ class DisplayWeatherForm extends FormBase {
     // Attaching the select2 library in order to be able to select countries and cities from the city.list.json
     $form['#attached']['library'] = 'openweathermap/openweathermap.select2_for_settings_form';
 
-    // @todo I think this has got some work to do because it does not remember the selection
-    // Update city value if country is selected
     if (isset($form_state->getUserInput()['country'])) {
 
       $country_code = $form_state->getUserInput()['country'];
@@ -216,8 +216,10 @@ class DisplayWeatherForm extends FormBase {
    *   Form state array.
    *
    * @return mixed
+   *   Return the city based on country.
    */
   public function changeCountryAjaxCallback($form, $form_state) {
+
     return $form['city'];
   }
 
@@ -230,6 +232,7 @@ class DisplayWeatherForm extends FormBase {
    *   Form state array.
    *
    * @return mixed
+   *   Return the lat and lon variables.
    */
   public function changeCityLatLonAjaxCallback($form, $form_state) {
     $lat = $this->cityManager->getLatByCity($form['city']['#value']);
@@ -241,13 +244,7 @@ class DisplayWeatherForm extends FormBase {
   }
 
   /**
-   *
-   * Implement the validator because we were forced to set '#validated' => TRUE.
-   *
-   * @param array $form
-   *   Form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Form state array.
+   * {@inheritDoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
@@ -263,12 +260,7 @@ class DisplayWeatherForm extends FormBase {
   }
 
   /**
-   * Submit Form function.
-   *
-   * @param array $form
-   *   Form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Form state array.
+   * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
