@@ -1,7 +1,7 @@
-openweathermap.display_weather_default_location:
+openweathermap.display_weather:
   path: '/weather'
   defaults:
-    _controller: 'display_weather_controller:display'
+    _controller: '\Drupal\openweathermap\Controller\DisplayWeatherController::display'
   requirements:
     _permission: 'view weather forecast'
 

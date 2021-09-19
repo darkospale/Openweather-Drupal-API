@@ -17,10 +17,13 @@ class DisplayWeatherController extends ControllerBase {
    */
   public function display() {
     if (isset($_SESSION['form_values'])) {
-      if(!empty($_SESSION['form_values'])) {
-        $form_class = '\Drupal\openweathermap\Form\RemoveWeatherForm';
-
+      if (!empty($_SESSION['form_values'])) {
         foreach ($_SESSION['form_values'] as $key => $data) {
+          if ($data->getValue('update_periodically') == 1) {
+            // Minutes to seconds to miliseconds.
+            $interval = $data->getValue('update_interval') * 60 * 1000;
+            $_SESSION['build'][$key]['#attached']['drupalSettings']['interval'] = $interval;
+          }
           $call = [
             $key => $data,
           ];
@@ -34,17 +37,14 @@ class DisplayWeatherController extends ControllerBase {
                   'openweathermap/openweathermap.display_weather',
                 ],
               ],
-              'form' => [
-                $key => \Drupal::formBuilder()->getForm($form_class),
-              ],
             ],
-//            $_SESSION['key'] = $key,
           ];
         }
 
         return $_SESSION['build'];
       }
     }
+
     $build = [
       '#theme' => 'openweathermap_controller_theme',
       '#prefix' => '<h1>',

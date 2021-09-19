@@ -5,7 +5,9 @@
  * Contains openweathermap.module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -20,6 +22,28 @@ function openweathermap_help($route_name, RouteMatchInterface $route_match) {
       return $output;
     default:
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function openweathermap_theme($existing, $type, $theme, $path) {
+  return [
+    'openweathermap_controller_theme' => [
+      'render element' => 'children',
+      'template' => 'openweathermap-controller',
+      'path' => $path . '/templates',
+      'variables' => [],
+    ],
+    'openweathermap_mail_theme' => [
+      'render element' => 'children',
+      'template' => 'openweathermap-mail',
+      'path' => $path . '/templates',
+      'variables' => [
+        'body' => 'body',
+      ],
+    ],
+  ];
 }
 
 /**
@@ -39,30 +63,26 @@ function openweathermap_mail($key, &$message, $params) {
 }
 
 /**
- * Implements hook_theme().
+ * Implements hook_form_FORM_ID_alter().
  */
-function openweathermap_theme($existing, $type, $theme, $path) {
-  return [
-    // Name of the theme hook. This is used in the controller to trigger the hook.
-    'openweathermap_controller_theme' => [
-      'render element' => 'children',
-      // If no template name is defined here, it defaults to the name of the theme hook, ie. module-name-theme-hook.html.twig
-      'template' => 'openweathermap-controller',
-      // Optionally define path to Twig template files. Defaults to the module's ./templates/ directory.
-      'path' => $path . '/templates',
-      // Optionally define variables that will be passed to the Twig template and set default values for them.
-      'variables' => [],
-    ],
-    'openweathermap_mail_theme' => [
-      'render element' => 'children',
-      // If no template name is defined here, it defaults to the name of the theme hook, ie. module-name-theme-hook.html.twig
-      'template' => 'openweathermap-mail',
-      // Optionally define path to Twig template files. Defaults to the module's ./templates/ directory.
-      'path' => $path . '/templates',
-      // Optionally define variables that will be passed to the Twig template and set default values for them.
-      'variables' => [
-        'body' => 'body',
-      ],
-    ],
-  ];
+function openweathermap_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#submit'][] = 'openweathermap_user_login_submit';
+}
+
+/**
+ * Form submission handler for user_login_form().
+ * Redirects the user to the dashboard after logging in.
+ */
+function openweathermap_user_login_submit(&$form, FormStateInterface $form_state) {
+  $url = Url::fromUri('internal:/');
+
+  // Check if a destination was set, probably on an exception controller.
+  // @see \Drupal\user\Form\UserLoginForm::submitForm()
+  $request = \Drupal::service('request_stack')->getCurrentRequest();
+  if (!$request->request->has('destination')) {
+    $form_state->setRedirectUrl($url);
+  }
+  else {
+    $request->query->set('destination', $request->request->get('destination'));
+  }
 }

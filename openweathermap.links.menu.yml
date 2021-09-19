@@ -1,6 +1,6 @@
-openweathermap.display_weather_default_location:
+openweathermap.display_weather:
   title: 'Weather'
-  route_name: openweathermap.display_weather_default_location
+  route_name: openweathermap.display_weather
   description: 'Weather forecast'
   parent: main
   menu_name: main

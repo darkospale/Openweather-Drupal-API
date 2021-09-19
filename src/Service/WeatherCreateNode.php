@@ -86,8 +86,8 @@ class WeatherCreateNode {
       'field_google_map' => [
         0 => [
           'name' => $title,
-          'lat' => $data['#attached']['lat'],
-          'lon' => $data['#attached']['lon'],
+          'lat' => $data['#attributes']['lat']['#markup'],
+          'lon' => $data['#attributes']['lon']['#markup'],
           'zoom' => '9',
           'type' => 'roadmap',
           'width' => '100%',

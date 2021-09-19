@@ -38,4 +38,5 @@ interface CityManagerInterface {
    *   Get a city ID or FALSE if a city was not found.
    */
   public function getCityId($country_code, $city_name);
+
 }

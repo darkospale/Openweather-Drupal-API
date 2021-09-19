@@ -3,3 +3,5 @@ type: module
 description: 'Retrieves weather forecast data from openweathermap.org and displays on the page.'
 core_version_requirement: ^8 || ^9
 package: custom
+dependencies:
+  - drupal:google_map_field

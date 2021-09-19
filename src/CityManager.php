@@ -64,9 +64,7 @@ class CityManager implements CityManagerInterface {
       // city.list.json file has empty strings instead of some country codes,
       // therefore validate that a country code exists in Drupal's country list.
       if (isset($drupal_country_list[$country_code])) {
-
         if (!array_key_exists($country_code, $countries)) {
-
           $country_name = $drupal_country_list[$country_code];
           $countries[$country_code] = $country_name;
         }

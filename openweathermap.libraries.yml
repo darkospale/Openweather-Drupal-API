@@ -4,14 +4,7 @@ openweathermap.display_weather:
     component:
       css/openweathermap-weather-page.css: {}
   js:
-    js/google_map.js: {}
-#    js/chart.js: {}
-  dependencies:
-    - core/drupal
-    - core/jquery
-    - core/jquery.once
-    - core/drupalSettings
-    - openweathermap/select2
+    js/openweathermap.time_interval.js: {}
 
 openweathermap.select2_for_settings_form:
   version: VERSION

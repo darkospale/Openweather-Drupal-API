@@ -13,14 +13,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class DisplayWeatherForm extends FormBase {
 
   /**
-   * All countries from the 'city.list.json' file.
-   *
-   * @var array
-   *   Returns all the countries in array.
-   */
-  protected $countries;
-
-  /**
    * City manager service.
    *
    * @var \Drupal\openweathermap\CityManagerInterface
@@ -29,12 +21,22 @@ class DisplayWeatherForm extends FormBase {
   protected $cityManager;
 
   /**
+   * All countries from the 'city.list.json' file.
+   *
+   * @var array
+   *   Returns all the countries in array.
+   */
+  protected $countries;
+
+  /**
    * @var Drupal\openweathermap\Service\WeatherService
    *   Weather Service class.
    */
   protected $weatherService;
 
   /**
+   * Function that creates instances of dependency injection classes.
+   *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   Container Dependency Injection class.
    *
@@ -43,8 +45,8 @@ class DisplayWeatherForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
-    $instance->countries = $instance->cityManager->getCountries();
     $instance->cityManager = $container->get('city_manager');
+    $instance->countries = $instance->cityManager->getCountries();
     $instance->weatherService = $container->get('get_weather');
 
     return $instance;
@@ -170,7 +172,7 @@ class DisplayWeatherForm extends FormBase {
     $form['update_container']['update_interval'] = [
       '#type' => 'number',
       '#title' => $this->t('Update interval in minutes'),
-      '#min' => 1,
+      '#description' => $this->t('The updated values can depend on different locations because not all data is updated on the same interval'),
       '#default_value' => $form_state->getValue('update_interval'),
       '#states' => [
         'enabled' => [
@@ -240,21 +242,21 @@ class DisplayWeatherForm extends FormBase {
    * {@inheritDoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Checks if the values in form are correctly set.
     if (empty($form_state->getValue('city'))) {
-      $form_state->setErrorByName('city', $this->t('The "City" field is required.'));
+      $form_state->setErrorByName('city', $this->t('The "City" field is required!'));
     }
     if (empty($form_state->getValue('country'))) {
-      $form_state->setErrorByName('country', $this->t('The "Country" field is required.'));
+      $form_state->setErrorByName('country', $this->t('The "Country" field is required!'));
     }
     if (empty($form_state->getValue('units_of_measurement'))) {
-      $form_state->setErrorByName('units_of_measurement', $this->t('The "Units of measurement" field is required.'));
+      $form_state->setErrorByName('units_of_measurement', $this->t('The "Units of measurement" field is required!'));
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+    if ($form_state->getValue('update_periodically') == 1) {
+      if (empty($form_state->getValue('update_interval'))) {
+        $form_state->setErrorByName('update_interval', $this->t('The "Update interval" must be at least 1!'));
+      }
+    }
     // Checks if the values in session have been set, warning suppression.
     if (!isset($_SESSION['count'])) {
       $_SESSION['count'] = 0;
@@ -262,11 +264,21 @@ class DisplayWeatherForm extends FormBase {
     if (!isset($_SESSION['build'])) {
       $_SESSION['build'] = [];
     }
-//    if (count($_SESSION['form_values']) > 6) {
-      $_SESSION['count']++;
-      $_SESSION['form_values'][$_SESSION['count']] = $form_state;
-      $this->redirectPage();
-//    }
+    if(!isset($_SESSION['form_values'])) {
+      $_SESSION['form_values'] = [];
+    }
+    if (count($_SESSION['form_values'], COUNT_RECURSIVE) >= 4) {
+      $form_state->setErrorByName('form_values', $this->t('Maximum number of weather requests is 4!'));
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $_SESSION['count']++;
+    $_SESSION['form_values'][$_SESSION['count']] = $form_state;
+    $this->redirectPage();
   }
 
 }
