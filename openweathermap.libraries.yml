@@ -1,5 +1,4 @@
 openweathermap.display_weather:
-  version: VERSION
   css:
     component:
       css/openweathermap-weather-page.css: {}

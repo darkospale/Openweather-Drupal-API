@@ -2,9 +2,11 @@
   Drupal.behaviors.MyModuleBehavior = {
     attach: function (context, settings) {
       var update_interval = drupalSettings.interval;
-      setInterval(function () {
-        location.reload();
-      }, update_interval);
+      if (update_interval >= 60000) {
+        setInterval(function () {
+          location.reload();
+        }, update_interval);
+      }
     }
   }
 })(jQuery, Drupal, drupalSettings);

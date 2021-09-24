@@ -99,6 +99,8 @@ class WeatherService {
       $country_name = $this->countryManager->getList()[$build->sys->country];
 
       $value['country_image'] = [
+        '#prefix' => '<div class="country-image">',
+        '#suffix' => '</div>',
         '#markup' => '<img src=/sites/default/files/weather-icons/flags/' . strtolower($build->sys->country) . '.png><br>',
       ];
       $value['country'] = [

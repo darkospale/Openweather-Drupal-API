@@ -19,11 +19,6 @@ class DisplayWeatherController extends ControllerBase {
     if (isset($_SESSION['form_values'])) {
       if (!empty($_SESSION['form_values'])) {
         foreach ($_SESSION['form_values'] as $key => $data) {
-          if ($data->getValue('update_periodically') == 1) {
-            // Minutes to seconds to miliseconds.
-            $interval = $data->getValue('update_interval') * 60 * 1000;
-            $_SESSION['build'][$key]['#attached']['drupalSettings']['interval'] = $interval;
-          }
           $call = [
             $key => $data,
           ];
@@ -34,11 +29,16 @@ class DisplayWeatherController extends ControllerBase {
               \Drupal::service('get_weather')->makeRequest($call),
               '#attached' => [
                 'library' => [
-                  'openweathermap/openweathermap.display_weather',
+                  $key => 'openweathermap/openweathermap.display_weather',
                 ],
               ],
             ],
           ];
+          if ($data->getValue('update_periodically') == 1) {
+            // Minutes to seconds to miliseconds.
+            $interval = $data->getValue('update_interval') * 60 * 1000;
+            $_SESSION['build'][$key]['#attached']['drupalSettings']['interval'] = $interval;
+          }
         }
 
         return $_SESSION['build'];

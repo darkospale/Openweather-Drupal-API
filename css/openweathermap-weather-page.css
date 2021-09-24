@@ -49,6 +49,12 @@
   position: relative;
   margin: 0 50px;
   text-align: center;
+  padding-bottom: 50px;
+}
+
+.country-image {
+  height: 250px;
+  padding: 20px 0;
 }
 
 h1 {
