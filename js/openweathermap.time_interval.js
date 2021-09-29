@@ -3,9 +3,11 @@
     attach: function (context, settings) {
       var update_interval = drupalSettings.interval;
       if (update_interval >= 60000) {
-        setInterval(function () {
-          location.reload();
-        }, update_interval);
+        window.onload = function() {
+          setTimeout(function () {
+            window.location.reload();
+          }, update_interval);
+        }
       }
     }
   }

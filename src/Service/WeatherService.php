@@ -74,8 +74,8 @@ class WeatherService {
     $this->api_weather_endpoint = $config->get('api_weather_endpoint');
     $this->api_air_pollution_endpoint = $config->get('api_air_pollution_endpoint');
 
-    foreach ($data as $call) {
-      $params = $call->getValues();
+    $data = reset($data);
+      $params = $data->getValues();
       $city = $params['city'];
       $lat = $params['lat'];
       $lon = $params['lon'];
@@ -214,11 +214,10 @@ class WeatherService {
         // This is needed in order to not lose some data in the process.
         // Also some servers have a limit of how many mails they can send
         // in one minute, so this is a good practice also.
-        sleep(1);
+//        sleep(1);
       }
 
       return $value;
-    }
   }
 
 }
